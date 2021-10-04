@@ -7,7 +7,7 @@ const PORT = 4000;
 const DB_NAME = "dcmotorDB"
 
 // routes
-var testAPIRouter = require("./routes/testAPI");
+var experimentAPIRouter = require("./routes/experimentAPI");
 var UserRouter = require("./routes/Users");
 
 app.use(cors());
@@ -22,7 +22,7 @@ connection.once('open', function() {
 })
 
 // setup API endpoints
-app.use("/testAPI", testAPIRouter);
+app.use("/experimentAPI", experimentAPIRouter);
 app.use("/user", UserRouter);
 
 app.listen(PORT, function() {
