@@ -14,14 +14,39 @@ const UserSchema = new Schema({
     type: Date,
     required: false,
   },
-  Experiments: [
+  // Experiments: [
+  //   {
+  //     experimentId: {
+  //       type: String, // MONGOID
+  //       required: true,
+  //     },
+  //   },
+  // ],
+  Sessions : [
     {
-      experimentId: {
-        type: String, // MONGOID
+      sessionId : {
+        type: String,
         required: true,
       },
-    },
-  ],
+      sessionStartTime : {
+        type: Date,
+        required: true
+      },
+      sessionEndTime : {
+        type : Date,
+        required: true,
+      },
+      experiments : [
+        {
+          experimentsId : {
+            type: String,
+            required: true,
+          },
+        }
+      ]
+
+    }
+  ]
 });
 
 module.exports = User = mongoose.model("Users", UserSchema);
