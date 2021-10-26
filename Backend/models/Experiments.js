@@ -42,15 +42,15 @@ const ExperimentSchema = new Schema(
             default: null,
           },
         },
-        timeStamp: {
-          type: Date,
-          default: null,
-        }
+  
       }
     ]
     
     
   },
+  {
+    timestamp : true,
+  }
   
 );
 
