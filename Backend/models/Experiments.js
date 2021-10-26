@@ -12,6 +12,10 @@ const ExperimentSchema = new Schema(
       type: String,
       required: true,
     },
+    experimentId: {
+      type: String,
+      required: true,
+    },
     experimentData: [
       {
         request: {
