@@ -15,11 +15,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Connection to MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/' + DB_NAME, { useNewUrlParser: true });
+try{
+    mongoose.connect('mongodb://127.0.0.1:27017/' + DB_NAME, { useNewUrlParser: true });
 const connection = mongoose.connection;
 connection.once('open', function() {
     console.log("MongoDB database connection established successfully !");
-})
+});
+}
+catch (error){
+    console.error(`Error: ${error.message}`)
+    process.exit(1)
+}
+
 
 // setup API endpoints
 app.use("/experimentAPI", experimentAPIRouter);
