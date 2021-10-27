@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Connection to MongoDB
 try{
-    mongoose.connect('mongodb://127.0.0.1:27017/' + DB_NAME, { useNewUrlParser: true });
+    mongoose.connect('mongodb+srv://rajat:'+PASSWD+'@cluster0.xqcnb.mongodb.net/' + DB_NAME+'?retryWrites=true&w=majority', { useNewUrlParser: true });
 const connection = mongoose.connection;
 connection.once('open', function() {
     console.log("MongoDB database connection established successfully !");
