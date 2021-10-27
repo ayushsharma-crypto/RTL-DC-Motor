@@ -4,7 +4,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const PORT = 4000;
-const DB_NAME = "dcmotorDB"
+const DB_NAME = "dcmotorDB";
+const dotenv = require('dotenv');
 
 // routes
 var experimentAPIRouter = require("./routes/experimentAPI");
@@ -13,10 +14,11 @@ var UserRouter = require("./routes/Users");
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+dotenv.config();
 
 // Connection to MongoDB
 try{
-    mongoose.connect('mongodb+srv://rajat:'+PASSWD+'@cluster0.xqcnb.mongodb.net/' + DB_NAME+'?retryWrites=true&w=majority', { useNewUrlParser: true });
+    mongoose.connect(`${process.env.API_URL}`, { useNewUrlParser: true });
 const connection = mongoose.connection;
 connection.once('open', function() {
     console.log("MongoDB database connection established successfully !");

@@ -1,5 +1,5 @@
 #backend 
-.env
+BACKEND/.env
 
 # Logs
 logs
