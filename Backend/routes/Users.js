@@ -13,7 +13,7 @@ router.get("/", function(req, res) {
 		} else {
 			res.json(users);
 		}
-	})
+	});
 });
 
 // NOTE: Below functions are just sample to show you API endpoints working, for the assignment you may need to edit them
@@ -24,7 +24,8 @@ router.post("/register", (req, res) => {
     const newUser = new User({
         name: req.body.name,
         email: req.body.email,
-        date: req.body.date
+        date: req.body.date,
+        sessions: [],
     });
 
     newUser.save()

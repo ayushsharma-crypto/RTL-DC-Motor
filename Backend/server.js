@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const PORT = 4000;
@@ -12,8 +12,11 @@ var experimentAPIRouter = require("./routes/experimentAPI");
 var UserRouter = require("./routes/Users");
 
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());  
+app.use(express.urlencoded({ extended: true }));
+
 dotenv.config();
 
 // Connection to MongoDB
@@ -31,7 +34,8 @@ catch (error){
 
 
 // setup API endpoints
-app.use("/experimentAPI", experimentAPIRouter);
+
+app.use("/experiment", experimentAPIRouter);
 app.use("/user", UserRouter);
 
 app.listen(PORT, function() {

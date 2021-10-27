@@ -13,16 +13,9 @@ const UserSchema = new Schema({
   date: {
     type: Date,
     required: false,
+    default: Date.now,
   },
-  // Experiments: [
-  //   {
-  //     experimentId: {
-  //       type: String, // MONGOID
-  //       required: true,
-  //     },
-  //   },
-  // ],
-  Sessions : [
+  sessions : [
     {
       sessionId : {
         type: String,
@@ -44,7 +37,6 @@ const UserSchema = new Schema({
           },
         }
       ]
-
     }
   ]
 });
