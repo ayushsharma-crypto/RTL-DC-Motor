@@ -148,8 +148,10 @@ router.get("/signout", function(req, res){
 // GET request 
 // Check Logged or not
 router.get('/checklog',function(req, res){
+    console.log(req.user);
     if(req.isAuthenticated()){
-        User.findOne({'email': req.user.username},function(err, user){
+        User.findOne({'email': req.user.email},function(err, user){
+            console.log(user);
             if(err){
                 console.log(err);
             }
