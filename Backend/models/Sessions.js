@@ -4,11 +4,7 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema(
     {
         date : String,
-        slots : [
-            {
-                slot: String,
-            }
-        ]
+        slots : [String]
     }
 );
 

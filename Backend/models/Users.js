@@ -34,14 +34,7 @@ const UserSchema = new Schema({
         type : String,
         required: true,
       },
-      experiments : [
-        {
-          experimentsId : {
-            type: String,
-            required: true,
-          },
-        }
-      ]
+      experiments : [String]
     }
   ]
 });

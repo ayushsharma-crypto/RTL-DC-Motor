@@ -32,9 +32,10 @@ const ExperimentSchema = new Schema(
         },
   
       }
-    ]
     
-    
+    ],
+    description : String,
+    isactive : Boolean,
   },
   {
     timestamp : true,
