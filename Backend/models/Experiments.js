@@ -4,18 +4,6 @@ const Schema = mongoose.Schema;
 // Create Schema
 const ExperimentSchema = new Schema(
   {
-    userId: {
-      type: String,
-      required: true,
-    },
-    sessionId: {
-      type: String,
-      required: true,
-    },
-    experimentId: {
-      type: String,
-      required: true,
-    },
     experimentData: [
       {
         request: {
