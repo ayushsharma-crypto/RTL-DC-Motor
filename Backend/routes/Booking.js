@@ -42,14 +42,14 @@ router.put("/addsession", (req,res) => {
                             console.log(user);
                             if(!user)
                             {   
-                                res.send({
+                                res.json({
                                     success: false,
                                     res: "user not found",
                                 })
                             }
                             else 
                             {
-                                res.send({
+                                res.json({
                                     success : "true",
                                     res: "Session reserved successfully" ,
                                 });
@@ -75,7 +75,7 @@ router.put("/addsession", (req,res) => {
                     function(err,slot) {
                         if(!slot.lastErrorObject.updatedExisting)
                         {
-                            res.send({
+                            res.json({
                                 success : 'false',
                                 res : 'Slot already booked',
                             });
@@ -100,7 +100,7 @@ router.put("/addsession", (req,res) => {
                                     },
                                     function(err,user){
                                             console.log(user);
-                                            res.send({
+                                            res.json({
                                                 success : "true",
                                                 res: "Session reserved successfully" ,
                                             });
@@ -114,7 +114,7 @@ router.put("/addsession", (req,res) => {
     }
     else 
     {
-        res.send({
+        res.json({
             success : "false",
             res: " user not logged in",
         });
@@ -141,7 +141,7 @@ router.get("/getslot",(req,res)=>{
                     return item.indexOf(b) === -1;
                 });
             }                
-            res.send({
+            res.json({
                 success : "true",
                 res : "Slots send",
                 slots : myArray, // list
@@ -150,7 +150,7 @@ router.get("/getslot",(req,res)=>{
     }
     else
     {
-        res.send({
+        res.json({
             success: "false",
             res: "user not auth",
         })
@@ -202,14 +202,14 @@ router.post("/createxperiment",(req,res)=>{
                         },
                     );
                 });
-                res.send({
+                res.json({
                     success : "true",
                     res : "Experiment added",
                 })
             }
             else 
             {
-                res.send({
+                res.json({
                     success: "false",
                     res: "This session is not booked.",
                 });
@@ -218,7 +218,7 @@ router.post("/createxperiment",(req,res)=>{
     }
     else 
     {
-        res.send({
+        res.json({
             success : "false",
             res: "user not auth",
         })
@@ -250,7 +250,7 @@ router.put("/startexperiment",(req,res)=>{
     //     }
     //     else 
     //     {
-    //         res.send({
+    //         res.json({
     //             success : false,
     //             res : "Error in backend in startexperiment api",
     //         });   
@@ -284,17 +284,17 @@ router.put("/stopexperiment",(req,res)=>{
 
 
 router.get("/experimentdata",(req,res)=>{
-    Userexperiment.findOne({ _id : req.body.id},function(err,data){
+    Userexperiment.findOne({ _id : req.body.experimentid},function(err,data){
         if(data)
         {
-            res.send({
+            res.json({
                 success : "true",
                 data : data,
             });
         }
         else 
         {
-            res.send({
+            res.json({
                 success : "false",
                 res : "no experiment found with this id",
                 
@@ -327,7 +327,7 @@ router.get("/getsession",(req,res) => {
                     }
                 });
             }
-            res.send({
+            res.json({
                 success : true,
                 res : "success",
                 sessions : result_sessions,
@@ -335,7 +335,7 @@ router.get("/getsession",(req,res) => {
         }
         else 
         {
-            res.send({
+            res.json({
                 success : false,
                 res : "Error in backend in getsession api",
             });   
