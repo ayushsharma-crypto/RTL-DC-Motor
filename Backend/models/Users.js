@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt   = require('bcrypt-nodejs');
+
 const Schema = mongoose.Schema;
 // Create Schema
 const UserSchema = new Schema({
@@ -20,23 +21,7 @@ const UserSchema = new Schema({
     required: false,
     default: Date.now,
   },
-  sessions : [
-    {
-      sessionDate : {
-        type: String,
-        required: true,
-      },
-      sessionStartTime : {
-        type: String,
-        required: true
-      },
-      sessionEndTime : {
-        type : String,
-        required: true,
-      },
-      experiments : [String]
-    }
-  ]
+  sessions : [String]
 });
 
 // generating a hash

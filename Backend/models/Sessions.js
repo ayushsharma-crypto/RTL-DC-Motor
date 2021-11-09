@@ -8,8 +8,5 @@ const UserSchema = new Schema(
     }
 );
 
-// 0 - 1 => 1
-// 1 - 2 => 2
-// 2 - 3 => 3
 module.exports = Session = mongoose.model("Sessions", UserSchema);
 

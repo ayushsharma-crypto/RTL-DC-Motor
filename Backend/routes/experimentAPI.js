@@ -3,7 +3,7 @@ var router = express.Router();
 
 
 // Load Experiment model
-const User = require("../models/Experiments");
+// const User = require("../models/Experiments");
 
 router.get("/", function(req, res) {
 	res.send("API tested!");
