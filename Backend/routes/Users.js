@@ -137,6 +137,7 @@ router.post('/signin', function(req, res, next) {
             res : "",
             email : ""
         };
+
     if (err) { 
         return next(err); 
     }
@@ -156,6 +157,7 @@ router.post('/signin', function(req, res, next) {
         response.email = req.body.email;
 
         return res.json(response);
+
     });
     })(req, res, next);
 });

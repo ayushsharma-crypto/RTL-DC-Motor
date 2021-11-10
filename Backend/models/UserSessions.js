@@ -27,3 +27,4 @@ const UserSchema = new Schema(
 // 1 - 2 => 2
 // 2 - 3 => 3
 module.exports = Usersessions = mongoose.model("UserSessions", UserSchema);
+module.exports = Usersessions = mongoose.model("UserSessions", UserSchema);

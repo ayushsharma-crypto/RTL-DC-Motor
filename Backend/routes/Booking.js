@@ -23,10 +23,11 @@ router.post("/addsession", (req,res) => {
         // console.log(EndTime);
         Session.findOneAndUpdate(
             {
-                date : req.body.date,
+                date : req.body.date.substring(0,11),
             },
             {
-                date : req.body.date,
+                date : req.body.date.substring(0,11),
+
             },
             {
                 new : true,
@@ -37,7 +38,8 @@ router.post("/addsession", (req,res) => {
             {
                 Session.findOneAndUpdate(
                     {
-                        date : req.body.date,
+
+                        date : req.body.date.substring(0,11),
                         slots : {$ne : StartTime},
                     },
                     {
@@ -53,7 +55,8 @@ router.post("/addsession", (req,res) => {
                         {
                             const newSession = new Usersessions({
                                 email: username,
-                                sessionDate : req.body.date,
+
+                                sessionDate : req.body.date.substring(0,11),
                                 sessionStartTime : StartTime,
                                 sessionEndTime : EndTime,
                                 experiment : [],
@@ -92,7 +95,8 @@ router.post("/addsession", (req,res) => {
     else 
     {
         res.json({
-            success : "false",
+
+            success : false,
             res: " user not logged in",
         });
     }
@@ -116,7 +120,8 @@ router.get("/getslot",(req,res)=>{
     if(req.isAuthenticated)
     {
         
-        var filter = {date : req.body.date};
+
+        var filter = {date : req.body.date.substring(0,11)};
         Session.findOne(filter,
          function (err,docs) {
             myArray = []    
@@ -161,6 +166,7 @@ router.post("/createxperiment",(req,res)=>{
         // const [username, password] = credentials.split(':');
 
         var username = req.body.email;
+
         
         var datetime = new Date().toLocaleString("en-GB", {timeZone: "Asia/Kolkata"});
         var dateFormat = datetime.substring(6,10)+ '-' + datetime.substring(3,5) + '-' + datetime.substring(0,2);
@@ -183,6 +189,7 @@ router.post("/createxperiment",(req,res)=>{
                 const newExp = new Userexperiment({
                     experimentData: [],
                     description : '',
+
                     isactive : false,
                 });
                 newExp.save(function(err,exp){
@@ -201,8 +208,9 @@ router.post("/createxperiment",(req,res)=>{
                             if(sess)
                             {
                                 res.json({
-                                    success : "true",
-                                    res : "Experiment added",
+
+                                    success : true,
+                                    res : "Experiment added with id" + exp.id,
                                 });
                             }
                         }
@@ -212,8 +220,9 @@ router.post("/createxperiment",(req,res)=>{
             else 
             {
                 res.json({
-                    success: "false",
-                    res: "This session is not booked.",
+
+                    success: false,
+                    res: "This session is not booked by you.",
                 });
             }
         });
@@ -221,7 +230,8 @@ router.post("/createxperiment",(req,res)=>{
     else 
     {
         res.json({
-            success : "false",
+
+            success : false,
             res: "user not auth",
         })
     }
@@ -288,14 +298,16 @@ router.get("/experimentdata",(req,res)=>{
         if(data)
         {
             res.json({
-                success : "true",
+
+                success : true,
                 data : data,
             });
         }
         else 
         {
             res.json({
-                success : "false",
+
+                success : false,
                 res : "no experiment found with this id",
             });
         }
@@ -347,3 +359,4 @@ router.get("/value",(req,res)=>{
 
 
 module.exports = router;
+
