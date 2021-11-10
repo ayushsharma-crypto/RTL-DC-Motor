@@ -90,7 +90,7 @@ router.post("/addsession", (req,res) => {
     else 
     {
         res.json({
-            success : "false",
+            success : false,
             res: " user not logged in",
         });
     }
@@ -135,7 +135,7 @@ router.get("/getslot",(req,res)=>{
                 myArray[index] = element.substring(0,2) + ':' + "00";
             }  
             res.json({
-                success : "true",
+                success : true,
                 res : "Slots send",
                 slots : myArray, // list
             });
@@ -144,7 +144,7 @@ router.get("/getslot",(req,res)=>{
     else
     {
         res.json({
-            success: "false",
+            success: false,
             res: "user not auth",
         })
     }
@@ -197,7 +197,7 @@ router.post("/createxperiment",(req,res)=>{
                             if(sess)
                             {
                                 res.json({
-                                    success : "true",
+                                    success : true,
                                     res : "Experiment added",
                                 });
                             }
@@ -208,7 +208,7 @@ router.post("/createxperiment",(req,res)=>{
             else 
             {
                 res.json({
-                    success: "false",
+                    success: false,
                     res: "This session is not booked.",
                 });
             }
@@ -217,7 +217,7 @@ router.post("/createxperiment",(req,res)=>{
     else 
     {
         res.json({
-            success : "false",
+            success : false,
             res: "user not auth",
         })
     }
@@ -284,14 +284,14 @@ router.get("/experimentdata",(req,res)=>{
         if(data)
         {
             res.json({
-                success : "true",
+                success : true,
                 data : data,
             });
         }
         else 
         {
             res.json({
-                success : "false",
+                success : false,
                 res : "no experiment found with this id",
             });
         }
