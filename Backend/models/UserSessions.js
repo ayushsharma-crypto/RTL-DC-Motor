@@ -8,15 +8,15 @@ const UserSchema = new Schema(
           required: true,
         },
         sessionDate : {
-          type: Number,
+          type: String,
           required: true,
         },
         sessionStartTime : {
-          type: Number,
+          type: String,
           required: true
         },
         sessionEndTime : {
-          type : Number,
+          type : String,
           required: true,
         },
         experiments : [String],

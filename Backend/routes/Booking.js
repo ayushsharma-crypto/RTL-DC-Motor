@@ -13,104 +13,58 @@ router.put("/addsession", (req,res) => {
         const base64Credentials = req.headers.authorization.split(' ')[1];
         const credentials = Buffer.from(base64Credentials, 'base64').toString('utf8');
         var [username, password] = credentials.split(':');
-        Session.findOne({ date : req.body.date }).then(day => {
-            if (!day) {
-                const newUser = new Session({
-                    date : req.body.date,
-                    slots : [req.body.starttime,]
-                });
-                newUser.save();
-                
-                const newSession = new Usersessions({
-                    email : username,
-                    sessionDate : req.body.date,
-                    sessionStartTime : req.body.starttime,
-                    sessionEndTime : req.body.endtime,
-                    experiment : [],
-                });
 
-                newSession.save(function(err,session){
-                    console.log(session.id);
-                    User.findOneAndUpdate(
-                        {
-                            email : username,
-                        },
-                        {
-                            $push: { sessions : session.id},
-                        },
-                        function(err,user){
-                            console.log(user);
-                            if(!user)
-                            {   
-                                res.json({
-                                    success: false,
-                                    res: "user not found",
-                                })
-                            }
-                            else 
-                            {
-                                res.json({
-                                    success : "true",
-                                    res: "Session reserved successfully" ,
-                                });
-                            }
-                        }
-                    );
-                });            
-            }        
-            else 
+        Session.findOneAndUpdate(
             {
-                Session.findOneAndUpdate(
-                    {
-                        date : req.body.date,
-                        slots : {$ne : req.body.starttime},
-                    },
-                    {
-                        $push : { slots : req.body.starttime,},
-                    },
-                    {
-                        new: true,
-                        rawResult:true
-                    },
-                    function(err,slot) {
-                        if(!slot.lastErrorObject.updatedExisting)
-                        {
-                            res.json({
-                                success : 'false',
-                                res : 'Slot already booked',
-                            });
-                        }
-                        else 
-                        {
-                            const newSession = new Usersessions({
-                                email: username,
-                                sessionDate : req.body.date,
-                                sessionStartTime : req.body.starttime,
-                                sessionEndTime : req.body.endtime,
-                                experiment : [],
-                            });
-                            
-                            newSession.save(function(err,session){
-                                User.findOneAndUpdate(
-                                    {
-                                        email : username,
-                                    },
-                                    {
-                                        $push: { sessions : session.id},
-                                    },
-                                    function(err,user){
-                                            console.log(user);
-                                            res.json({
-                                                success : "true",
-                                                res: "Session reserved successfully" ,
-                                            });
-                                    }
-                                );
-                            });            
-                        }
+                date : req.body.date,
+                slots : {$ne : req.body.starttime},
+            },
+            {
+                $push : { slots : req.body.starttime,},
+            },
+            {
+                new: true,
+                rawResult:true,
+                upsert: true,
+            },
+            function(err,slot) {
+                console.log(slot);
+                if(slot.lastErrorObject.updatedExisting || slot.lastErrorObject.upserted )
+                {
+                    const newSession = new Usersessions({
+                        email: username,
+                        sessionDate : req.body.date,
+                        sessionStartTime : req.body.starttime,
+                        sessionEndTime : req.body.endtime,
+                        experiment : [],
                     });
-            }
-        });
+                    
+                    newSession.save(function(err,session){
+                        User.findOneAndUpdate(
+                            {
+                                email : username,
+                            },
+                            {
+                                $push: { sessions : session.id},
+                            },
+                            function(err,user){
+                                    console.log(user);
+                                    res.json({
+                                        success : "true",
+                                        res: "Session reserved successfully" ,
+                                    });
+                            }
+                        );
+                    });            
+                }
+                else 
+                {
+                    res.json({
+                        success : 'false',
+                        res : 'Slot already booked',
+                    });
+                }
+            });
     }
     else 
     {
@@ -124,13 +78,21 @@ router.put("/addsession", (req,res) => {
 router.get("/getslot",(req,res)=>{
     if(req.isAuthenticated)
     {
+        
         var filter = {date : req.body.date};
-        Session.findOne({
-            date : req.body.date,
-        }, function (err,docs) {
+        Session.findOne(filter,
+         function (err,docs) {
             myArray = []    
-            for (let index = 0; index < 24; index++) {
-                var ind = index*10000;
+            for (let index = 1; index < 24; index++) {
+                var ind;
+                if(index >= 10)
+                {
+                    ind = String(index);
+                }
+                else 
+                {
+                    ind = '0' + String(index);
+                }
                 myArray.push(ind);
             }
             if(docs)
