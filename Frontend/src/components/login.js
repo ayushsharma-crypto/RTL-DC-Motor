@@ -34,28 +34,21 @@ export default class Login extends Component {
 
     console.log(newUser);
 
-    // axios.post("http://localhost:4000/login", newUser).then(res => {
-    //   console.log("responseee", res.data);
-    //   if (res.data.val === 0)
-    //   {
-    //     alert("Please enter your credentials");
-    //   } 
-    //   else if (res.data.val === 1)
-    //   {
-    //     alert("You are not registered. Register Now!");
-    //   }
-    //   else if (res.data.val === 2)
-    //   {
-    //     alert("Password incorrect! Try again...");
-    //   }
-    //   if (res.data.val === 3) {
-    //     localStorage.setItem("currentUser",JSON.stringify(res.data));
-    //     // localStorage.setItem('currentJob',"");
-    //     var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    //     console.log("loginid = "+ currentUser.user.email);
-    //     this.props.history.push("/UserHome");
-    //   }
-    // });
+    axios.post("http://localhost:4000/user/signin", newUser).then(res => {
+      console.log(res)
+      if (res.data.success === true) {
+        localStorage.setItem("currentUser",JSON.stringify(res.data.email));
+        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        console.log("loginid = "+ currentUser.email);
+        // this.props.history.push("/UserHome");
+      }
+      else
+      {
+        alert(res.data.res);
+      }
+    });
+
+    this.props.history.push("/sessionsList");
 
 
 
@@ -78,34 +71,19 @@ export default class Login extends Component {
 
     console.log(newUser);
 
-    // axios.post("http://localhost:4000/login", newUser).then(res => {
-    //   console.log("responseee", res.data);
-    //   if (res.data.val === 0)
-    //   {
-    //     alert("Please enter your credentials");
-    //   } 
-    //   else if (res.data.val === 1)
-    //   {
-    //     alert("You are not registered. Register Now!");
-    //   }
-    //   else if (res.data.val === 2)
-    //   {
-    //     alert("Password incorrect! Try again...");
-    //   }
-    //   if (res.data.val === 3) {
-    //     localStorage.setItem("currentUser",JSON.stringify(res.data));
-    //     // localStorage.setItem('currentJob',"");
-    //     var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    //     console.log("loginid = "+ currentUser.user.email);
-    //     this.props.history.push("/UserHome");
-    //   }
-    // });
-    // this.setState({
-    //     email: "",
-    //   password: "",
-    // });
+    axios.post("http://localhost:4000/user/signin", newUser).then(res => {
+      if (res.data.success === true) {
+        localStorage.setItem("currentUser",JSON.stringify(res.data));
+        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.props.history.push("/sessionsList");
+      }
+      else
+      {
+        alert(res.data.res);
+      }
+    });
 
-    this.props.history.push("/sessionsList");
+    
   }
 
   render() {

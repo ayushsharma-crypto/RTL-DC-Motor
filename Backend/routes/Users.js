@@ -1,8 +1,82 @@
-var express = require("express");
-var router = express.Router();
+// Authentication libraries
+const dotenv = require('dotenv');
+const express = require("express");
+const passport = require("passport");
+// const passportLocalMongoose = require("passport-local-mongoose");
+const LocalStrategy = require('passport-local').Strategy;
+const router = express.Router();
+dotenv.config();
 
 // Load User model
 const User = require("../models/Users");
+
+// connection with passportjs
+
+// stategy for user sign up
+passport.use('local-signup', new LocalStrategy({
+        usernameField : 'email',
+        passwordField : 'password',
+        passReqToCallback : true
+    },
+    function(req, username, password, done){
+        process.nextTick(function() {
+            User.findOne({'email':username}, function(err, user){
+                if(err){
+                    return done(err);
+                }
+                if(user){
+                    return done(null, false, { message: 'Oops! That email is already taken.' });
+                } 
+                else{
+                    const newUser = new User({
+                        name: req.body.name,
+                        email: req.body.email,
+                        sessions: [],
+                    });
+                    newUser.password = newUser.generateHash(password);
+                    newUser.save()
+                        .then(user => done(null, user))
+                        .catch(err => { throw err});
+                }
+            });
+        });
+    }
+));
+
+// stategy for user sign in
+passport.use('local-signin', new LocalStrategy({
+        usernameField: 'email',
+        passwordField: 'password',
+        passReqToCallback : true
+    },
+    function(req, username, password, done) {
+        process.nextTick(function() {
+            User.findOne({ 'email': username }, function (err, user) {
+                    if (err) { 
+                        return done(err); 
+                    }
+                    if (!user) {
+                        return done(null, false, { message: 'Incorrect username.' });
+                    }
+                    if (!user.validPassword(password)) {
+                        return done(null, false, { message: 'Incorrect password.' });
+                    }
+                    return done(null, user);
+                });
+        });
+    }
+));
+
+passport.serializeUser(function(user, done) {
+    done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+    User.findById(id, function(err, user) {
+        done(err, user);
+    });
+});
+  
 
 // GET request 
 // Getting all the users
@@ -11,50 +85,114 @@ router.get("/", function(req, res) {
 		if (err) {
 			console.log(err);
 		} else {
-			res.json(users);
+			res.json({
+                success: true,
+                res : users
+            });
 		}
 	});
 });
 
-// NOTE: Below functions are just sample to show you API endpoints working, for the assignment you may need to edit them
+
 
 // POST request 
-// Add a user to db
-router.post("/register", (req, res) => {
-    const newUser = new User({
-        name: req.body.name,
-        email: req.body.email,
-        date: req.body.date,
-        sessions: [],
+// Sign UP
+router.post('/signup', function(req, res, next) {
+    console.log('Checkpoint1');
+    passport.authenticate('local-signup', function(err, user, info) {
+        console.log('Checkpoint');
+        let response = {
+            success : false,
+            res : "",
+            email : ""
+        };
+      if (err) { 
+          console.log("ERROR!!!!")
+        return next(err); 
+      }
+      if (!user) { 
+          response.success = false;
+        //   response.email = req.body.email;
+          response.res = "That email is already taken.";
+        return res.json(response); 
+      }
+      else{
+        response.success = true;
+        response.res = "Successfully Registered";
+        response.email = req.body.email;
+        console.log("sending back");
+        return res.json(response);
+         
+      }
+    })(req, res, next);
+  });
+  
+
+// POST request 
+// Sign In
+router.post('/signin', function(req, res, next) {
+    passport.authenticate('local-signin', function(err, user, info) {
+        let response = {
+            success: false,
+            res : "",
+            email : ""
+        };
+    if (err) { 
+        return next(err); 
+    }
+    if (!user) { 
+        response.success = false;
+        // response.email = req.body.email;
+
+        response.res = "Either mail or Password is wrong or not registered user";
+        return res.json(response); 
+    }
+    req.logIn(user, function(err) {
+        if (err) { 
+        return next(err); 
+        }
+        response.success = true;
+        response.res = "Welcome!";
+        response.email = req.body.email;
+
+        return res.json(response);
     });
+    })(req, res, next);
+});
 
-    newUser.save()
-        .then(user => {
-            res.status(200).json(user);
-        })
-        .catch(err => {
-            res.status(400).send(err);
+
+// GET request 
+// Sign Out
+router.get("/signout", function(req, res){
+  if(req.isAuthenticated()){
+    req.logout();
+    res.json({success: true,res: "Successfull Signout"});
+  }
+  else{
+    res.json({success: false, res: "Not Authenticated"});
+  }
+});
+
+
+// GET request 
+// Check Logged or not
+router.get('/checklog',function(req, res){
+    console.log(req.user);
+    if(req.isAuthenticated()){
+        User.findOne({'email': req.user.email},function(err, user){
+            console.log(user);
+            if(err){
+                console.log(err);
+            }
+            else{
+                res.json({success: true, res:"Authenticated",user: user});
+            }
         });
+    }
+    else{
+        res.json({success: false, res:"Not Authenticated"});
+    }
 });
 
-// POST request 
-// Login
-router.post("/login", (req, res) => {
-	const email = req.body.email;
-	// Find user by email
-	User.findOne({ email }).then(user => {
-		// Check if user email exists
-		if (!user) {
-			return res.status(404).json({
-				error: "Email not found",
-			});
-        }
-        else{
-            res.send("Email Found");
-            return user;
-        }
-	});
-});
 
 module.exports = router;
-

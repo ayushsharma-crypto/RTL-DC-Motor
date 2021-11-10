@@ -12,6 +12,7 @@ import Session from './components/session'
 import Player from './components/player';
 import RequestSession from './components/requestSession';
 import SessionsList from './components/sessionsList'
+import ExperimentsList from './components/experimentsList'
 import Experiment from './components/experiment'
 
 
@@ -28,6 +29,7 @@ function App() {
         <Route path="/player/:id" component={Player}/>
         <Route path="/requestSession" component={RequestSession}/>
         <Route path="/sessionsList" component={SessionsList}/>
+        <Route path="/experimentsList" component={ExperimentsList}/>
         <Route path="/experiment" component={Experiment}/>
 
 

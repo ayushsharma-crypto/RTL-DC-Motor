@@ -12,17 +12,13 @@ export default class Register extends Component {
     super(props);
 
     this.state = {
-    //   username: "",
       email: "",
-      fullname: "",
+      name: "",
       password: "",
-      type: "applicant"
     };
-    // this.onChangeUsername = this.onChangeUsername.bind(this);
     this.onChangeEmail = this.onChangeEmail.bind(this);
-    this.onChangeFullname = this.onChangeFullname.bind(this);
+    this.onChangeName = this.onChangeName.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
-    // this.onChangeType = this.onChangeType.bind(this);
     this.responseGoogle = this.responseGoogle.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -35,60 +31,50 @@ export default class Register extends Component {
   }
   
 
-//   onChangeUsername(event) {
-//     this.setState({ username: event.target.value });
-//   }
+
   onChangeEmail(event) {
     this.setState({ email: event.target.value });
   }
-  onChangeFullname(event) {
-    this.setState({ fullname: event.target.value });
+  onChangeName(event) {
+    this.setState({ name: event.target.value });
   }
   onChangePassword(event) {
     this.setState({ password: event.target.value });
   }
-//   onChangeType(event) {
-//     this.setState({ type: event.target.value });
-//   }
+
   onSubmit(e) {
     e.preventDefault();
 
     const newUser = {
-        // username: this.state.username,
-        fullname: this.state.fullname,
+        name: this.state.name,
         password: this.state.password,
         email: this.state.email,
-        type: this.state.type
     };
 
-    axios.post("http://localhost:4000/add", newUser).then(res => {
+
+    console.log(newUser);
+
+    axios.post("http://localhost:4000/user/signup", newUser).then(res => {
       console.log("Adding: \n");
       console.log(res.data);
-      if(res.data.v === 1)
+      if(res.data.success === false)
         alert("This email-id has already been taken! Try with a different email-id");
       else
       {
-        console.log("registered data is: \n");
-        console.log(res.data);
         localStorage.removeItem("currentUser");
-        localStorage.setItem('currentUser',JSON.stringify(res.data));
+        localStorage.setItem('currentUser',JSON.stringify(res.data.email));
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         console.log("setting local storage as: \n");
-        console.log(currentUser.user);
-        // if(newUser.type === 'recruitor')
-        //   this.props.history.push("/recruitorEditProfile");
-        // else
-        this.props.history.push("/login");
+        console.log(currentUser.email);
+        this.props.history.push("/sessionsList");
       }
     });
 
 
     this.setState({
-    //   username: "",
       email: "",
       password: "",
-      fullname: "",
-    //   type: "applicant"
+      name: "",
     });
   }
 
@@ -101,7 +87,6 @@ export default class Register extends Component {
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="mr-auto">
           <Link to="/" className="nav-link">Home</Link>
-          {/* <Link to="/allusers" className="nav-link">Users</Link> */}
           <Link to="/login" className="nav-link">Sign In</Link>
           <Link to="/register" className="navbar-brand">Sign Up</Link>
           </Nav>
@@ -116,8 +101,8 @@ export default class Register extends Component {
             <input
               type="text"
               className="form-control"
-              value={this.state.fullname}
-              onChange={this.onChangeFullname}
+              value={this.state.name}
+              onChange={this.onChangeName}
             />
           </div>
           {/* <div className="form-group">

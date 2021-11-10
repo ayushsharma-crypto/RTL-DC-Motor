@@ -36,7 +36,7 @@ export default class Home extends Component {
         <br/>
         <br/>
         <div style={{backgroundColor:"skyblue", padding:100, textAlign:"center"}}>
-        <h1>ESW Team 22 - DC motor project</h1>
+        <h1>ESW Team 22 - RTL - DC motor speed control project</h1>
         </div>
       </div>
     );

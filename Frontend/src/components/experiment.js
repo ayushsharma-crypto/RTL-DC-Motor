@@ -6,7 +6,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import { Link } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 
-const data = [
+var data = [
     {
       name: "Page A",
       uv: 4000,
@@ -52,9 +52,49 @@ const data = [
   ];
 
 export default class Experiment extends Component {
-    constructor() {
-        super();
-    }
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      email: "",
+      data : ''
+    };
+    this.onGetData = this.onGetData.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+
+  }  
+
+  onGetData() {
+
+    var experiment = {
+      email : '',
+      id : '' 
+    };
+
+    axios.get("http://localhost:4000/booking/experimentdata", experiment).then(res => {
+      console.log(res)
+      if (res.data.success === true) {
+        this.setState({data : res.data.data});
+      }
+
+      else
+      {
+        alert(res.data.res);
+      }
+    });
+
+
+
+  }
+
+  onSubmit(e)
+  {
+    e.preventDefault();
+  }
+
+
+
+
     render() {
         return (
             <div>
@@ -76,7 +116,7 @@ export default class Experiment extends Component {
 
                 <br/>
                 <br/>
-                <h1>Experiment ABC</h1>
+                <h1>Experiment {this.state.data.name}</h1>
                 <br/>
                 <br/>
                 <div class = "graph">
