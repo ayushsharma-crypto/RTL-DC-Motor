@@ -8,25 +8,24 @@ const Userexperiment = require("../models/UserExperiment");
 const Usersessions = require("../models/UserSessions");
 
 router.post("/addsession", (req,res) => {
-    if(req.isAuthenticated)
-    {
+    
         // const base64Credentials = req.headers.authorization.split(' ')[1];
         // const credentials = Buffer.from(base64Credentials, 'base64').toString('utf8');
         // var [username, password] = credentials.split(':');
 
         var username = 'k@gmail.com';
 
-
+        console.log(req.body);
         var StartTime = req.body.starttime.substring(0,2) + "00";
         var EndTime = req.body.starttime.substring(0,2)  + "59";
-        console.log(typeof StartTime);
+        // console.log(typeof StartTime);
         // console.log(EndTime);
         Session.findOneAndUpdate(
             {
-                date : req.body.date.substring(0,11),
+                date : req.body.date,
             },
             {
-                date : req.body.date.substring(0,11),
+                date : req.body.date,
 
             },
             {
@@ -39,7 +38,7 @@ router.post("/addsession", (req,res) => {
                 Session.findOneAndUpdate(
                     {
 
-                        date : req.body.date.substring(0,11),
+                        date : req.body.date,
                         slots : {$ne : StartTime},
                     },
                     {
@@ -56,7 +55,7 @@ router.post("/addsession", (req,res) => {
                             const newSession = new Usersessions({
                                 email: username,
 
-                                sessionDate : req.body.date.substring(0,11),
+                                sessionDate : req.body.date,
                                 sessionStartTime : StartTime,
                                 sessionEndTime : EndTime,
                                 experiment : [],
@@ -91,15 +90,15 @@ router.post("/addsession", (req,res) => {
             }
         )
         
-    }
-    else 
-    {
-        res.json({
+    // }
+    // else 
+    // {
+    //     res.json({
 
-            success : false,
-            res: " user not logged in",
-        });
-    }
+    //         success : false,
+    //         res: " user not logged in",
+    //     });
+    // }
 });
 
 function createHour(index)
@@ -117,11 +116,8 @@ function createHour(index)
 
 
 router.get("/getslot",(req,res)=>{
-    if(req.isAuthenticated)
-    {
         
-
-        var filter = {date : req.body.date.substring(0,11)};
+        var filter = {date : req.query.date};
         Session.findOne(filter,
          function (err,docs) {
             myArray = []    
@@ -147,14 +143,14 @@ router.get("/getslot",(req,res)=>{
                 slots : myArray, // list
             });
         }); 
-    }
-    else
-    {
-        res.json({
-            success: false,
-            res: "user not auth",
-        })
-    }
+    // }
+    // else
+    // {
+    //     res.json({
+    //         success: false,
+    //         res: "user not auth",
+    //     })
+    // }
     
 });
 

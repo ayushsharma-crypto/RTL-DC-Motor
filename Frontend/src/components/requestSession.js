@@ -17,8 +17,9 @@ export default class RequestSession extends Component {
           email: "",
           password: "",
           sessionDate: "",
+          StartDate: "",
           availableSlots : [],
-          sessionTime : ""
+          sessionTime : "01:00"
         };
 
         this.onChangeSessionDate= this.onChangeSessionDate.bind(this);
@@ -37,16 +38,24 @@ export default class RequestSession extends Component {
       }
       onChangeSessionDate(momentDate) {
         console.log("value:\n");
-        // const date = momentDate ? momentDate.format('YYYY-MM-DD') : undefined;
+        var date = momentDate ? moment(momentDate).format('YYYY-MM-DD') : undefined;
         // set state for session time
-        // console.log(date);
+        // console.log("Hello : " , date);
         this.setState({ sessionDate: momentDate });
+        this.setState({StartDate : date});
+        // console.log(date);
+        
+        // let session = 
+        // {
+        //     params: {
+        //         date : date,
+        //     }
+        // }
+        
+        
 
-        let session = {
-            date : this.state.sessionDate
-        };
-
-        axios.get("http://localhost:4000/booking/getslot", session).then(res => {
+        axios.get("http://localhost:4000/booking/getslot",{ params : {
+            date : String(date) }}).then(res => {
             console.log("Got slots: \n");
             console.log(res.data);
             if(res.data.success === true)
@@ -67,7 +76,7 @@ export default class RequestSession extends Component {
 
         console.log("Submitting");
         let session = {
-            date : this.state.sessionDate,
+            date : this.state.StartDate,
             starttime : this.state.sessionTime
         };
         console.log(session);
