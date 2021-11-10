@@ -120,10 +120,6 @@ router.get("/getslot",(req,res)=>{
     
 });
 
-// Date time format 
-// Date : YYYYMMDD
-// time : HHMM
-
 router.post("/createxperiment",(req,res)=>{
     if(req.isAuthenticated)
     {
@@ -149,7 +145,6 @@ router.post("/createxperiment",(req,res)=>{
             console.log(Sessions);
             if(Sessions)
             {
-                var ind = Sessions.experiments.toObject().length;
                 const newExp = new Userexperiment({
                     experimentData: [],
                     description : req.body.desc,
@@ -163,12 +158,21 @@ router.post("/createxperiment",(req,res)=>{
                                 experiments : exp.id,
                             },
                         },
+                        {
+                            new : true,
+                        },
+                        function(err,sess)
+                        {
+                            if(sess)
+                            {
+                                res.json({
+                                    success : "true",
+                                    res : "Experiment added",
+                                });
+                            }
+                        }
                     );
                 });
-                res.json({
-                    success : "true",
-                    res : "Experiment added",
-                })
             }
             else 
             {
