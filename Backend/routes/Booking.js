@@ -91,7 +91,7 @@ router.get("/getslot",(req,res)=>{
                 }
                 else 
                 {
-                    ind =  String(index) + '0';
+                    ind =  '0' + String(index) ;
                 }
                 myArray.push(ind);
             }
