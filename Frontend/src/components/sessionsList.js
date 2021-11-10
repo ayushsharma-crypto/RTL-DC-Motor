@@ -30,8 +30,8 @@ export default class SessionsList extends Component {
                 <tr>
                     <th>Date</th>
                     <th>Time</th>
-                    <th>Experiment</th>
-                    <th>Session</th>
+                    {/* <th>Experiment</th>
+                    <th>Session</th> */}
                     <th>Link</th>
                     
                 </tr>

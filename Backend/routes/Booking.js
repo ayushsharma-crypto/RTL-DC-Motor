@@ -310,43 +310,66 @@ router.get("/experimentdata",(req,res)=>{
     });
 });
 
-router.get("/getsession",(req,res) => {
+router.get("/getsession",async (req,res) => {
     const base64Credentials = req.headers.authorization.split(' ')[1];
     const credentials = Buffer.from(base64Credentials, 'base64').toString('utf8');
     const [username, password] = credentials.split(':');
+    let user = await User.findOne({email : username});
+    // console.log(user);
+    let result_session = [];
+    let list = user.sessions.toObject(); 
+    for (sess in list)
+    {
+        console.log(list[sess]);
+        let temp = await Usersessions.findOne({_id : list[sess]},{sessionDate : true, sessionStartTime: true});
+        result_session.push({
+            sessionStartTime : temp.sessionStartTime,
+            sessionDate : temp.sessionDate,
+        });
+    }
     
-    User.findOne({email : username}, function(err,user){
-        if(user)
-        {
-            var session_arr = user.sessions.toObject();
-            var result_sessions = []
-            console.log(session_arr);
-            for (let index = 0; index < session_arr.length; index++) {
-                const element = session_arr[index];
-                Usersessions.findOne({_id : element},{sessionDate : true, sessionStartTime: true},function(err,session_element){
-                    if(session_element)
-                    {
-                        result_sessions.push({
-                            sessionStartTime : session_element.sessionDate,
-                            sessionDate : session_element.sessionDate,
-                        });
-                    }
-                });
-            }
-            res.json({
-                success : true,
-                res : "success",
-                sessions : result_sessions,
-            });
-        }
-        else 
-        {
-            res.json({
-                success : false,
-                res : "Error in backend in getsession api",
-            });   
-        }
+    res.json({
+        success : true,
+        res : "success",
+        sessions : result_session,
     });
+    // User.findOne({email : username}, async function(err,user){
+    //     if(user)
+    //     {
+    //         var session_arr = user.sessions.toObject();
+    //         var result_sessions = []
+    //         console.log(session_arr);
+    //         let user = await User.findOne({email : username});
+            
+    //         for (let index = 0; index < session_arr.length; index++) {
+    //             const element = session_arr[index];
+    //             Usersessions.findOne({ _id : element},{sessionDate : true, sessionStartTime: true}, async function(err,session_element){
+    //                  if(session_element)
+    //                 {
+    //                     // console.log(session_element.sessionDate);
+    //                      result_sessions.push({
+    //                         sessionStartTime : session_element.sessionStartTime,
+    //                         sessionDate : session_element.sessionDate,
+    //                     });
+    //                     console.log(result_sessions);
+    //                 }
+    //             });
+    //         }
+    //         console.log("result :",result_sessions);
+    //         res.json({
+    //             success : true,
+    //             res : "success",
+    //             sessions : result_sessions,
+    //         });
+    //     }
+    //     else 
+    //     {
+    //         res.json({
+    //             success : false,
+    //             res : "Error in backend in getsession api",
+    //         });   
+    //     }
+    // });
 });
 
 router.get("/value",(req,res)=>{
