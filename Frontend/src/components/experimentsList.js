@@ -13,9 +13,23 @@ export default class ExperimentsList extends Component {
     
         this.state = {
           email: "",
+          experiments : [],
         };
         // this.onCreateExperiment= this.onCreateExperiment.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+      }
+    
+      componentDidMount() {
+        var user_email = JSON.parse(localStorage.getItem('currentUser'));
+        console.log("going to get sessions");
+        axios.get("http://localhost:4000/booking/getExperiment", user_email)
+        .then(response => {
+            if(response.data.success === true)
+            {
+                console.log(response.data.sessions);
+                this.setState({experiments : response.data.experiments});
+            }
+        });
       }
 
     onSubmit(e) {
@@ -33,7 +47,7 @@ export default class ExperimentsList extends Component {
             console.log(res.data);
             if(res.data.success === true)
             {
-                this.props.history.push("/sessionsList");
+                this.props.history.push("/session");
             }
             else
             {
@@ -86,13 +100,13 @@ export default class ExperimentsList extends Component {
                 <thead>
                 <tr>
                     <th>Experiment ID</th>
-                    <th>Experiment Name</th>
+                    {/* <th>Experiment Name</th> */}
                     <th>Link</th>
                     
                 </tr>
                 </thead>
                 <tbody>
-
+              
                 </tbody>
             </table>
             </div>

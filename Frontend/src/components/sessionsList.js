@@ -5,47 +5,99 @@ import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import Button from 'react-bootstrap/Button'
 import Navbar from 'react-bootstrap/Navbar'
-
+ 
 export default class SessionsList extends Component {
+ 
+   constructor(props) {
+       super(props);
+  
+       this.state = {
+         sessions: [],
+       };
+       this.viewExperiments = this.viewExperiments.bind(this);
+     }
+ 
+    
+ 
+     componentDidMount() {
+       var user_email = JSON.parse(localStorage.getItem('currentUser'));
+       console.log("going to get sessions");
+       axios.get("http://localhost:4000/booking/getsession", user_email)
+       .then(response => {
+           if(response.data.success === true)
+           {
+               console.log(response.data.sessions);
+               this.setState({sessions : response.data.sessions});
+           }
+       });
 
-    render() {
-        return (
-            <div>
-            <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-                <Navbar.Collapse id="responsive-navbar-nav">
-                    <Nav className="mr-auto">
-                    <Nav.Link href="/requestSession">Request Session    </Nav.Link>
-                    {/* <Nav.Link href="/sessionHistory">Session History    </Nav.Link> */}
-                    {/* <Navbar.Brand href="/startSession">Start Session    </Navbar.Brand> */}
-                    </Nav>
-                    <Nav>
-                        <Nav.Link href="/">Logout</Nav.Link>
-                    </Nav>
-                </Navbar.Collapse>
-            </Navbar>
-            <h1>Sessions: </h1> 
-            <table className="table table-striped">
-                <thead>
-                <tr>
-                    <th>Date</th>
-                    <th>Time</th>
-                    {/* <th>Experiment</th>
-                    <th>Session</th> */}
-                    <th>Link</th>
-                    
-                </tr>
-                </thead>
-                <tbody>
+     }
+ 
+     
+     viewExperiments(e) {
+        e.preventDefault();
+    //    localStorage.setItem("current_session_id",JSON.stringify(e));
+       console.log(e.target.id.value);
+       this.props.history.push({
+        pathname: "/experimentsList",
+        state: { id : e.target.id.value }
+      })
+     }
+ 
+   render() {
+       return (
+           <div>
+           <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+               <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+               <Navbar.Collapse id="responsive-navbar-nav">
+                   <Nav className="mr-auto">
+                   <Nav.Link href="/requestSession">Request Session    </Nav.Link>
+                   </Nav>
+                   <Nav>
+                       <Nav.Link href="/">Logout</Nav.Link>
+                   </Nav>
+               </Navbar.Collapse>
+           </Navbar>
+           <h1>Sessions: </h1>
+           <table className="table table-striped">
+               <thead>
+               <tr>
+                   <th>Date</th>
+                   <th>Time</th>
+                   <th>Link</th>
+                  
+               </tr>
+               </thead>
+               <tbody>
+           {
+           this.state.sessions.map((j, i) => {
+             return (
+               <tr>
+                 <td>{j.sessionDate}</td>
+                 <td>{j.sessionStartTime}</td>
+                 <td>
+                 <form onSubmit={this.viewExperiments}>
+                    <div className="form-group">
+                        <input type="submit" name="id" value={j.sessionId} className="btn btn-primary" />
+                    </div>
+                </form>
 
-                </tbody>
-            </table>
-            </div>
 
-
-
-        );
-    }
-
-
+                     {/* <button onClick={this.viewExperiments(j.sessionId)}>{j.sessionId}</button> */}
+                 {/* <Button className="btn btn-primary" value={j.sessionId} /> */}
+                 </td>
+               </tr>
+             );
+           })}
+         </tbody>
+           </table>
+           </div>
+ 
+ 
+ 
+       );
+   }
+ 
+ 
 }
+ 
