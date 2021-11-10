@@ -17,8 +17,8 @@ router.post("/addsession", (req,res) => {
 
         var StartTime = req.body.starttime.substring(0,2) + "00";
         var EndTime = req.body.starttime.substring(0,2)  + "59";
-        console.log(StartTime);
-        console.log(EndTime);
+        console.log(typeof StartTime);
+        // console.log(EndTime);
         Session.findOneAndUpdate(
             {
                 date : req.body.date,
@@ -46,7 +46,7 @@ router.post("/addsession", (req,res) => {
                         rawResult:true,
                     },
                     function(err,slot) {
-                        console.log(slot);
+                        // console.log(slot);
                         if(slot.lastErrorObject.updatedExisting)
                         {
                             const newSession = new Usersessions({
@@ -58,8 +58,6 @@ router.post("/addsession", (req,res) => {
                             });
                             
                             newSession.save(function(err,session){
-                                console.log(session.id);
-
                                 User.findOneAndUpdate(
                                     {
                                         email : username,
