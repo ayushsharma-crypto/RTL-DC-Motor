@@ -281,8 +281,6 @@ router.put("/stopexperiment",(req,res)=>{
 
 // });
 
-
-
 router.get("/experimentdata",(req,res)=>{
     Userexperiment.findOne({ _id : req.body.experimentid},function(err,data){
         if(data)
@@ -297,10 +295,8 @@ router.get("/experimentdata",(req,res)=>{
             res.json({
                 success : "false",
                 res : "no experiment found with this id",
-                
             });
         }
-        
     });
 });
 
