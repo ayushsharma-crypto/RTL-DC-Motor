@@ -7,64 +7,87 @@ const Session = require("../models/Sessions");
 const Userexperiment = require("../models/UserExperiment");
 const Usersessions = require("../models/UserSessions");
 
-router.put("/addsession", (req,res) => {
+router.post("/addsession", (req,res) => {
     if(req.isAuthenticated)
     {
         const base64Credentials = req.headers.authorization.split(' ')[1];
         const credentials = Buffer.from(base64Credentials, 'base64').toString('utf8');
         var [username, password] = credentials.split(':');
 
+
+        var StartTime = req.body.starttime.substring(0,2) + "00";
+        var EndTime = req.body.starttime.substring(0,2)  + "59";
+        console.log(StartTime);
+        console.log(EndTime);
         Session.findOneAndUpdate(
             {
                 date : req.body.date,
-                slots : {$ne : req.body.starttime},
             },
             {
-                $push : { slots : req.body.starttime,},
+                date : req.body.date,
             },
             {
-                new: true,
-                rawResult:true,
-                upsert: true,
+                new : true,
+                rawResult : true,
+                upsert : true,
             },
-            function(err,slot) {
-                console.log(slot);
-                if(slot.lastErrorObject.updatedExisting || slot.lastErrorObject.upserted )
-                {
-                    const newSession = new Usersessions({
-                        email: username,
-                        sessionDate : req.body.date,
-                        sessionStartTime : req.body.starttime,
-                        sessionEndTime : req.body.endtime,
-                        experiment : [],
+            function(err,sess)
+            {
+                Session.findOneAndUpdate(
+                    {
+                        date : req.body.date,
+                        slots : {$ne : StartTime},
+                    },
+                    {
+                        $push : { slots : StartTime,},
+                    },
+                    {
+                        new: true,
+                        rawResult:true,
+                    },
+                    function(err,slot) {
+                        console.log(slot);
+                        if(slot.lastErrorObject.updatedExisting)
+                        {
+                            const newSession = new Usersessions({
+                                email: username,
+                                sessionDate : req.body.date,
+                                sessionStartTime : StartTime,
+                                sessionEndTime : EndTime,
+                                experiment : [],
+                            });
+                            
+                            newSession.save(function(err,session){
+                                console.log(session.id);
+
+                                User.findOneAndUpdate(
+                                    {
+                                        email : username,
+                                    },
+                                    {
+                                        $push: { sessions : session.id},
+                                    },
+                                    function(err,user){
+                                            console.log(user);
+                                            res.json({
+                                                success : true,
+                                                res: "Session reserved successfully" ,
+                                            });
+                                    }
+                                );
+                            });            
+                        }
+                        else 
+                        {
+                            res.json({
+                                success : false,
+                                res : 'Slot already booked',
+                            });
+                        }
                     });
-                    
-                    newSession.save(function(err,session){
-                        User.findOneAndUpdate(
-                            {
-                                email : username,
-                            },
-                            {
-                                $push: { sessions : session.id},
-                            },
-                            function(err,user){
-                                    console.log(user);
-                                    res.json({
-                                        success : "true",
-                                        res: "Session reserved successfully" ,
-                                    });
-                            }
-                        );
-                    });            
-                }
-                else 
-                {
-                    res.json({
-                        success : 'false',
-                        res : 'Slot already booked',
-                    });
-                }
-            });
+            }
+        )
+        
     }
     else 
     {
@@ -75,6 +98,20 @@ router.put("/addsession", (req,res) => {
     }
 });
 
+function createHour(index)
+{
+    if(index >= 10)
+    {
+        ind = String(index);
+    }
+    else 
+    {
+        ind =  '0' + String(index);
+    }
+    return ind;
+}
+
+
 router.get("/getslot",(req,res)=>{
     if(req.isAuthenticated)
     {
@@ -84,16 +121,7 @@ router.get("/getslot",(req,res)=>{
          function (err,docs) {
             myArray = []    
             for (let index = 1; index < 24; index++) {
-                var ind;
-                if(index >= 10)
-                {
-                    ind = String(index);
-                }
-                else 
-                {
-                    ind =  '0' + String(index) ;
-                }
-                myArray.push(ind);
+                myArray.push(createHour(index) + '00');
             }
             if(docs)
             {
@@ -102,7 +130,12 @@ router.get("/getslot",(req,res)=>{
                 myArray = myArray.filter(function (b) {
                     return item.indexOf(b) === -1;
                 });
-            }                
+            }              
+            
+            for (let index = 0; index < myArray.length; index++) {
+                const element = myArray[index];
+                myArray[index] = element.substring(0,2) + ':' + "00";
+            }  
             res.json({
                 success : "true",
                 res : "Slots send",
@@ -312,4 +345,7 @@ router.get("/value",(req,res)=>{
 
 
 module.exports = router;
+
+
+
 
