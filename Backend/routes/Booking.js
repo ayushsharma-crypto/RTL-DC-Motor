@@ -10,9 +10,11 @@ const Usersessions = require("../models/UserSessions");
 router.post("/addsession", (req,res) => {
     if(req.isAuthenticated)
     {
-        const base64Credentials = req.headers.authorization.split(' ')[1];
-        const credentials = Buffer.from(base64Credentials, 'base64').toString('utf8');
-        var [username, password] = credentials.split(':');
+        // const base64Credentials = req.headers.authorization.split(' ')[1];
+        // const credentials = Buffer.from(base64Credentials, 'base64').toString('utf8');
+        // var [username, password] = credentials.split(':');
+
+        var username = 'k@gmail.com';
 
 
         var StartTime = req.body.starttime.substring(0,2) + "00";
@@ -25,6 +27,7 @@ router.post("/addsession", (req,res) => {
             },
             {
                 date : req.body.date.substring(0,11),
+
             },
             {
                 new : true,
@@ -35,6 +38,7 @@ router.post("/addsession", (req,res) => {
             {
                 Session.findOneAndUpdate(
                     {
+
                         date : req.body.date.substring(0,11),
                         slots : {$ne : StartTime},
                     },
@@ -51,6 +55,7 @@ router.post("/addsession", (req,res) => {
                         {
                             const newSession = new Usersessions({
                                 email: username,
+
                                 sessionDate : req.body.date.substring(0,11),
                                 sessionStartTime : StartTime,
                                 sessionEndTime : EndTime,
@@ -90,6 +95,7 @@ router.post("/addsession", (req,res) => {
     else 
     {
         res.json({
+
             success : false,
             res: " user not logged in",
         });
@@ -114,6 +120,7 @@ router.get("/getslot",(req,res)=>{
     if(req.isAuthenticated)
     {
         
+
         var filter = {date : req.body.date.substring(0,11)};
         Session.findOne(filter,
          function (err,docs) {
@@ -154,9 +161,12 @@ router.get("/getslot",(req,res)=>{
 router.post("/createxperiment",(req,res)=>{
     if(req.isAuthenticated)
     {
-        const base64Credentials = req.headers.authorization.split(' ')[1];
-        const credentials = Buffer.from(base64Credentials, 'base64').toString('utf8');
-        const [username, password] = credentials.split(':');
+        // const base64Credentials = req.headers.authorization.split(' ')[1];
+        // const credentials = Buffer.from(base64Credentials, 'base64').toString('utf8');
+        // const [username, password] = credentials.split(':');
+
+        var username = req.body.email;
+
         
         var datetime = new Date().toLocaleString("en-GB", {timeZone: "Asia/Kolkata"});
         var dateFormat = datetime.substring(6,10)+ '-' + datetime.substring(3,5) + '-' + datetime.substring(0,2);
@@ -178,7 +188,8 @@ router.post("/createxperiment",(req,res)=>{
             {
                 const newExp = new Userexperiment({
                     experimentData: [],
-                    description : req.body.desc,
+                    description : '',
+
                     isactive : false,
                 });
                 newExp.save(function(err,exp){
@@ -197,6 +208,7 @@ router.post("/createxperiment",(req,res)=>{
                             if(sess)
                             {
                                 res.json({
+
                                     success : true,
                                     res : "Experiment added with id" + exp.id,
                                 });
@@ -208,6 +220,7 @@ router.post("/createxperiment",(req,res)=>{
             else 
             {
                 res.json({
+
                     success: false,
                     res: "This session is not booked by you.",
                 });
@@ -217,6 +230,7 @@ router.post("/createxperiment",(req,res)=>{
     else 
     {
         res.json({
+
             success : false,
             res: "user not auth",
         })
@@ -284,6 +298,7 @@ router.get("/experimentdata",(req,res)=>{
         if(data)
         {
             res.json({
+
                 success : true,
                 data : data,
             });
@@ -291,6 +306,7 @@ router.get("/experimentdata",(req,res)=>{
         else 
         {
             res.json({
+
                 success : false,
                 res : "no experiment found with this id",
             });
@@ -343,7 +359,4 @@ router.get("/value",(req,res)=>{
 
 
 module.exports = router;
-
-
-
 

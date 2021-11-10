@@ -5,6 +5,8 @@ const passport = require("passport");
 const PORT = 4000;
 const DB_NAME = "dcmotorDB";
 const dotenv = require('dotenv');
+const cors = require("cors");
+
 var session = require("express-session")
 
 
@@ -22,6 +24,15 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(function (req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+});
+
 
 
 // Connection to MongoDB

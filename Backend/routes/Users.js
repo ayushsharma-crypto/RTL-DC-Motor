@@ -98,15 +98,31 @@ router.get("/", function(req, res) {
 // POST request 
 // Sign UP
 router.post('/signup', function(req, res, next) {
+    console.log('Checkpoint1');
     passport.authenticate('local-signup', function(err, user, info) {
+        console.log('Checkpoint');
+        let response = {
+            success : false,
+            res : "",
+            email : ""
+        };
       if (err) { 
+          console.log("ERROR!!!!")
         return next(err); 
       }
       if (!user) { 
-        return res.json({success: false,res: "That email is already taken."}); 
+          response.success = false;
+        //   response.email = req.body.email;
+          response.res = "That email is already taken.";
+        return res.json(response); 
       }
       else{
-        return res.json({success: true,res: "Successfully Registered"}); 
+        response.success = true;
+        response.res = "Successfully Registered";
+        response.email = req.body.email;
+        console.log("sending back");
+        return res.json(response);
+         
       }
     })(req, res, next);
   });
@@ -116,17 +132,32 @@ router.post('/signup', function(req, res, next) {
 // Sign In
 router.post('/signin', function(req, res, next) {
     passport.authenticate('local-signin', function(err, user, info) {
+        let response = {
+            success: false,
+            res : "",
+            email : ""
+        };
+
     if (err) { 
         return next(err); 
     }
     if (!user) { 
-        return res.json({success: false,res: "Either mail or Password is wrong or not registered user"}); 
+        response.success = false;
+        // response.email = req.body.email;
+
+        response.res = "Either mail or Password is wrong or not registered user";
+        return res.json(response); 
     }
     req.logIn(user, function(err) {
         if (err) { 
         return next(err); 
         }
-        return res.json({success: true,res:"Welcome!"});
+        response.success = true;
+        response.res = "Welcome!";
+        response.email = req.body.email;
+
+        return res.json(response);
+
     });
     })(req, res, next);
 });
