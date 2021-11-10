@@ -155,8 +155,8 @@ router.get("/getslot",(req,res)=>{
 });
 
 router.post("/createxperiment",(req,res)=>{
-    if(req.isAuthenticated)
-    {
+    // if(req.isAuthenticated)
+    // {
         // const base64Credentials = req.headers.authorization.split(' ')[1];
         // const credentials = Buffer.from(base64Credentials, 'base64').toString('utf8');
         // const [username, password] = credentials.split(':');
@@ -222,15 +222,15 @@ router.post("/createxperiment",(req,res)=>{
                 });
             }
         });
-    }
-    else 
-    {
-        res.json({
+    // }
+    // else 
+    // {
+    //     res.json({
 
-            success : false,
-            res: "user not auth",
-        })
-    }
+    //         success : false,
+    //         res: "user not auth",
+    //     })
+    // }
     
 });
 
