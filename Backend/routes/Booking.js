@@ -21,10 +21,10 @@ router.post("/addsession", (req,res) => {
         // console.log(EndTime);
         Session.findOneAndUpdate(
             {
-                date : req.body.date,
+                date : req.body.date.substring(0,11),
             },
             {
-                date : req.body.date,
+                date : req.body.date.substring(0,11),
             },
             {
                 new : true,
@@ -35,7 +35,7 @@ router.post("/addsession", (req,res) => {
             {
                 Session.findOneAndUpdate(
                     {
-                        date : req.body.date,
+                        date : req.body.date.substring(0,11),
                         slots : {$ne : StartTime},
                     },
                     {
@@ -51,7 +51,7 @@ router.post("/addsession", (req,res) => {
                         {
                             const newSession = new Usersessions({
                                 email: username,
-                                sessionDate : req.body.date,
+                                sessionDate : req.body.date.substring(0,11),
                                 sessionStartTime : StartTime,
                                 sessionEndTime : EndTime,
                                 experiment : [],
@@ -114,7 +114,7 @@ router.get("/getslot",(req,res)=>{
     if(req.isAuthenticated)
     {
         
-        var filter = {date : req.body.date};
+        var filter = {date : req.body.date.substring(0,11)};
         Session.findOne(filter,
          function (err,docs) {
             myArray = []    
