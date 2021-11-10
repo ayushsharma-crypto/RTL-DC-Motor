@@ -91,7 +91,7 @@ router.get("/getslot",(req,res)=>{
                 }
                 else 
                 {
-                    ind = '0' + String(index);
+                    ind =  String(index) + '0';
                 }
                 myArray.push(ind);
             }
@@ -132,9 +132,10 @@ router.post("/createxperiment",(req,res)=>{
         const [username, password] = credentials.split(':');
         
         var datetime = new Date().toLocaleString("en-GB", {timeZone: "Asia/Kolkata"});
-        var dateFormat = datetime.substring(6,10)+datetime.substring(3,5) +datetime.substring(0,2);
+        var dateFormat = datetime.substring(6,10)+ '-' + datetime.substring(3,5) + '-' + datetime.substring(0,2);
         var Curr_Time = datetime.substring(12,14)+datetime.substring(15,17) +datetime.substring(18,20);
         console.log(dateFormat);
+        
         console.log(Curr_Time);
 
         var filter = {
