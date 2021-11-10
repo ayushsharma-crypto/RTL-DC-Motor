@@ -198,7 +198,7 @@ router.post("/createxperiment",(req,res)=>{
                             {
                                 res.json({
                                     success : true,
-                                    res : "Experiment added",
+                                    res : "Experiment added with id" + exp.id,
                                 });
                             }
                         }
@@ -209,7 +209,7 @@ router.post("/createxperiment",(req,res)=>{
             {
                 res.json({
                     success: false,
-                    res: "This session is not booked.",
+                    res: "This session is not booked by you.",
                 });
             }
         });
