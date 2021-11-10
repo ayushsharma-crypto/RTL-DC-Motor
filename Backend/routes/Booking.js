@@ -135,7 +135,7 @@ router.get("/getslot",(req,res)=>{
             }
             if(docs)
             {
-                item = docs.slots.toObject().map(Number);
+                item = docs.slots.toObject();
                 
                 myArray = myArray.filter(function (b) {
                     return item.indexOf(b) === -1;
