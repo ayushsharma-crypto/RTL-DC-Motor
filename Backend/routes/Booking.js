@@ -109,19 +109,19 @@ router.get("/getslot",(req,res)=>{
 
 router.post("/createxperiment",async (req,res)=>{
 
-        var username = req.body.email.email;
+        var username = 'k@gmail.com';
         var datetime = new Date().toLocaleString("en-GB", {timeZone: "Asia/Kolkata"});
         var dateFormat = datetime.substring(6,10)+ '-' + datetime.substring(3,5) + '-' + datetime.substring(0,2);
         var Curr_Time = datetime.substring(12,14);
         console.log(dateFormat);
         console.log(Curr_Time);
-        const Session_list = await Usersessions.find({
+        var Session_list = await Usersessions.find({
             email : username,
             sessionDate : dateFormat,   
             sessionStartTime : { '$regex': '^'+ Curr_Time, '$options': 'i' },
         });
-        console.log(Session_list);
-        if(Session_list)
+        console.log(Session_list); // 
+        if(Session_list.length != 0)
         {
             const newExp = new Userexperiment({
                 experimentData: [],
@@ -253,6 +253,24 @@ router.post("/deleteSession",async(req,res) => {
     ses.remove();
 
     res.json({ success : true, res : "Session Deleted"});
+});
+
+
+router.post("/deleteExperiment", async(req,res) => {
+    let exp = await UserExperiment.findById(req.body.experiment_id);
+    console.log(exp);
+    let sess = await Usersessions.findById(req.body.session_id);
+    console.log(sess);
+    var idx = sess.experiments.indexOf(req.body.experiment_id);
+    if(idx !== -1)
+    {
+        sess.experiments.splice(idx, 1);
+        sess.save(function(err,ress) {
+            console.log(ress);
+        });
+    }
+    exp.remove();
+    res.json({ success : true, res : "Experiment Deleted"});
 });
 
 
