@@ -77,7 +77,8 @@ export default class Session extends Component {
     }
 
     onSubmitvcc(e){
-        console.log("voltage" ,this.state.vcc);
+        e.preventDefault();
+        console.log("voltage is " + this.state.vcc);
         axios.get("192.168.1.7/voltage",{ params : {
             voltage : this.state.vcc }}).then(res => {
             console.log(res.data);
@@ -142,18 +143,20 @@ export default class Session extends Component {
                 <div>
 
                 <form onSubmit={this.onSubmitvcc}>
-          <div className="form-group">
-            <label>VCC : </label>
-            <input
-              type="text"
-              className="form-control"
-              name = "vcc"
-              value={this.state.vcc}
-              onChange={this.onChangevcc}
-            />
-          </div>
-          <input type="submit" value="submit" className="btn btn-primary" />
-        </form>
+                <div className="form-group">
+                    <label>VCC : </label>
+                    <input
+                    type="text"
+                    className="form-control"
+                    name = "vcc"
+                    value={this.state.vcc}
+                    onChange={this.onChangevcc}
+                    />
+                </div>
+                <div className="form-group">
+                    <input type="submit" value="submit" className="btn btn-primary" />
+                </div>
+                </form>
 
 
                 </div>
