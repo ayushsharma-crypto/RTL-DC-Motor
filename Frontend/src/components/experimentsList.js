@@ -18,6 +18,7 @@ export default class ExperimentsList extends Component {
         // this.onCreateExperiment= this.onCreateExperiment.bind(this);
         this.onClickLink = this.onClickLink.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.deleteExperiment = this.deleteExperiment.bind(this);
       }
     
       componentDidMount() {
@@ -67,8 +68,27 @@ export default class ExperimentsList extends Component {
         e.preventDefault();
         this.props.history.push({
             pathname: "/experiment",
-            state: { id : e.target.id.value }
+            state: { experiment_id : e.target.id.value }
           })
+    }
+
+
+    deleteExperiment(e) {
+        e.preventDefault();
+        var sess_id  = this.props.location.state.id;
+        var req = {
+          experiment_id : e.target.id.value,
+          session_id : sess_id,
+        };
+        
+        axios.post("http://localhost:4000/booking/deleteExperiment", req)
+        .then(response => {
+            if(response.data.success === true)
+            {
+                alert(response.data.res);
+                window.location.reload(false);
+            }
+        });
     }
     
 
@@ -111,6 +131,7 @@ export default class ExperimentsList extends Component {
                     <th>Experiment ID</th>
                     {/* <th>Experiment Name</th> */}
                     <th>Link</th>
+                    <th>Delete Experiment</th>
                     
                 </tr>
                 </thead>
@@ -131,6 +152,14 @@ export default class ExperimentsList extends Component {
 
                             {/* <button onClick={this.viewExperiments(j.sessionId)}>{j.sessionId}</button> */}
                         {/* <Button className="btn btn-primary" value={j.sessionId} /> */}
+                        </td>
+                        <td>
+                        <form onSubmit={this.deleteExperiment}>
+                            <div className="form-group">
+                                <input type="submit" name="id" value={j.ExperimentId} className="btn btn-danger" />
+                            </div>
+                        </form>
+
                         </td>
                     </tr>
                     );
