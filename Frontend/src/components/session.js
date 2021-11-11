@@ -79,7 +79,7 @@ export default class Session extends Component {
     onSubmitvcc(e){
         e.preventDefault();
         console.log("voltage is " + this.state.vcc);
-        axios.get("192.168.1.7/voltage",{ params : {
+        axios.get("http://192.168.1.7/voltage",{ params : {
             voltage : this.state.vcc }}).then(res => {
             console.log(res.data);
             if(res.data.status == 200)
