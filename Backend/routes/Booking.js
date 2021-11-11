@@ -118,7 +118,7 @@ router.post("/createxperiment",async (req,res)=>{
         const Session_list = await Usersessions.find({
             email : username,
             sessionDate : dateFormat,   
-            sessionStartTime : { '$regex': '^'+Curr_Time, '$options': 'i' },
+            sessionStartTime : { '$regex': '^'+ Curr_Time, '$options': 'i' },
         });
         console.log(Session_list);
         if(Session_list)
@@ -174,24 +174,30 @@ router.get("/experimentdata",async (req,res)=>{
     }
 });
 
-router.get("/getExperiment",async (req,res) => {
+router.post("/getExperiment",async (req,res) => {
     username = "k@gmail.com"
+    var datetime = new Date().toLocaleString("en-GB", {timeZone: "Asia/Kolkata"});
+    var Curr_Time = datetime.substring(12,14);
+    console.log(req.body)
     let user = await UserSessions.findOne({
         email : username,
-        sessionDate : req.query.date,   
-        sessionStartTime : { '$regex': '^'+Curr_Time, '$options': 'i' },
+        _id : req.body.session_id,   
+        // sessionStartTime : { '$regex': '^' + Curr_Time, '$options': 'i' },
 
     });
-    // console.log(user);
-    let result_session = [];
+    console.log(user);
+
+
+    let result_experiments = [];
     let list = user.experiments.toObject(); 
     for (sess in list)
     {
-        result_session.push({
+        result_experiments.push({
             ExperimentId : list[sess]
         });
     }
-    res.json({success : true, res : "success", experiments : result_session, });
+    console.log(result_experiments);
+    res.json({success : true, res : "success", experiments : result_experiments, });
 });
 
 router.get("/getsession",async (req,res) => {

@@ -16,17 +16,23 @@ export default class ExperimentsList extends Component {
           experiments : [],
         };
         // this.onCreateExperiment= this.onCreateExperiment.bind(this);
+        this.onClickLink = this.onClickLink.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
       }
     
       componentDidMount() {
+        var sess_id  = this.props.location.state.id;
         var user_email = JSON.parse(localStorage.getItem('currentUser'));
+        console.log('sessID = ' + sess_id);
         console.log("going to get sessions");
-        axios.get("http://localhost:4000/booking/getExperiment", user_email)
+        var req = {
+            session_id : sess_id
+        };
+        axios.post("http://localhost:4000/booking/getExperiment", req)
         .then(response => {
             if(response.data.success === true)
             {
-                console.log(response.data.sessions);
+                console.log(response.data.experiments);
                 this.setState({experiments : response.data.experiments});
             }
         });
@@ -57,9 +63,12 @@ export default class ExperimentsList extends Component {
     }
 
 
-    onClickLink(link){
-        localStorage.setItem("currentExperimentID",JSON.stringify(link.target.id));
-        this.props.history.push("/experiment");
+    onClickLink(e){
+        e.preventDefault();
+        this.props.history.push({
+            pathname: "/experiment",
+            state: { id : e.target.id.value }
+          })
     }
     
 
@@ -106,7 +115,26 @@ export default class ExperimentsList extends Component {
                 </tr>
                 </thead>
                 <tbody>
-              
+                {
+                this.state.experiments.map((j, i) => {
+                    return (
+                    <tr>
+                        <td>{j.ExperimentId}</td>
+                        {/* <td>{j.sessionStartTime}</td> */}
+                        <td>
+                        <form onSubmit={this.onClickLink}>
+                            <div className="form-group">
+                                <input type="submit" name="id" value={j.ExperimentId} className="btn btn-primary" />
+                            </div>
+                        </form>
+
+
+                            {/* <button onClick={this.viewExperiments(j.sessionId)}>{j.sessionId}</button> */}
+                        {/* <Button className="btn btn-primary" value={j.sessionId} /> */}
+                        </td>
+                    </tr>
+                    );
+                })}
                 </tbody>
             </table>
             </div>

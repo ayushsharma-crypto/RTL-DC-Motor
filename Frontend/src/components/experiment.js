@@ -62,7 +62,9 @@ export default class Experiment extends Component {
     this.onGetData = this.onGetData.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
 
-  }  
+  }
+  
+  componentDidMount
 
   onGetData() {
 
