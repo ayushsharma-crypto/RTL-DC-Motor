@@ -59,40 +59,31 @@ export default class Experiment extends Component {
       email: "",
       data : ''
     };
-    this.onGetData = this.onGetData.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    // this.onGetData = this.onGetData.bind(this);
+    // this.onSubmit = this.onSubmit.bind(this);
 
   }
   
-  componentDidMount
-
-  onGetData() {
-
-    var experiment = {
-      email : '',
-      id : '' 
+  componentDidMount(){
+    var exp_id  = this.props.location.state.id;
+    var req = {
+      experiment_id : exp_id
     };
-
-    axios.get("http://localhost:4000/booking/experimentdata", experiment).then(res => {
-      console.log(res)
-      if (res.data.success === true) {
-        this.setState({data : res.data.data});
-      }
-
-      else
-      {
-        alert(res.data.res);
-      }
+    axios.post("http://localhost:4000/booking/experimentdata", req)
+    .then(response => {
+        if(response.data.success === true)
+        {
+            console.log(response.data.data);
+            this.setState({data : response.data.data});
+        }
     });
-
-
-
   }
 
-  onSubmit(e)
-  {
-    e.preventDefault();
-  }
+
+  // onSubmit(e)
+  // {
+  //   e.preventDefault();
+  // }
 
 
 
