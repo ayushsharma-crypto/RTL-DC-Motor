@@ -39,7 +39,7 @@ export default class ExperimentsList extends Component {
         });
       }
 
-    onSubmit(e) {
+      async onSubmit(e) {
         e.preventDefault();
         console.log('onononn');
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -49,18 +49,34 @@ export default class ExperimentsList extends Component {
             email : currentUser
         };
 
-        axios.post("http://localhost:4000/booking/createxperiment", exp).then(res => {
+        await axios.post("http://localhost:4000/booking/createxperiment", exp).then(res => {
             console.log("Creating: \n");
             console.log(res.data);
             if(res.data.success === true)
             {
-                this.props.history.push("/session");
+                // this.props.history.push("/session");
+
+                axios.post("http://127.0.0.1:8080/~/in-cse/in-name/AE-RTL-MOTOR", {
+                    "m2m:cnt":{
+                        "rn": res.data.res,
+                        "mni": 120
+                    }
+                });
+
+                this.props.history.push({
+                    pathname: "/session",
+                    state: { experiment_id :  res.data.res}
+                  });
             }
             else
             {
                 alert(res.data.res);
             }
-            });
+        });
+
+        
+
+
     }
 
 

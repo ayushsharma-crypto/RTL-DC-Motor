@@ -143,7 +143,7 @@ router.post("/createxperiment",async (req,res)=>{
                     function(err,sess)
                     {
                         if(sess){
-                            res.json({success : true,res : "Experiment added with id" + exp.id, });
+                            res.json({success : true, res : exp.id, });
                         }
                     }
                 );
