@@ -15,6 +15,7 @@ export default class SessionsList extends Component {
          sessions: [],
        };
        this.viewExperiments = this.viewExperiments.bind(this);
+       this.deleteSession = this.deleteSession.bind(this);
      }
  
     
@@ -43,6 +44,24 @@ export default class SessionsList extends Component {
         state: { id : e.target.id.value }
       })
      }
+
+     deleteSession(e) {
+      e.preventDefault();
+  //    localStorage.setItem("current_session_id",JSON.stringify(e));
+    //  console.log("vvvvvvvvv=== " + e);
+      var req = {
+        sessionId : e.target.id.value
+      };
+
+      // axios.post("http://localhost:4000/booking/deleteSession", req)
+      // .then(response => {
+      //     if(response.data.success === true)
+      //     {
+      //         alert(response.data.res);
+      //     }
+      // });
+
+   }
  
    render() {
        return (
@@ -64,7 +83,8 @@ export default class SessionsList extends Component {
                <tr>
                    <th>Date</th>
                    <th>Time</th>
-                   <th>Link</th>
+                   <th>Experiments Link</th>
+                   <th>Delete Session</th>
                   
                </tr>
                </thead>
@@ -83,8 +103,18 @@ export default class SessionsList extends Component {
                 </form>
 
 
+
                      {/* <button onClick={this.viewExperiments(j.sessionId)}>{j.sessionId}</button> */}
                  {/* <Button className="btn btn-primary" value={j.sessionId} /> */}
+                 </td>
+
+                 <td>
+                 <form onSubmit={this.deleteSession}>
+                    <div className="form-group">
+                        <input type="submit" name="id" value={j.sessionId} className="btn btn-danger" />
+                    </div>
+                </form>
+
                  </td>
                </tr>
              );
