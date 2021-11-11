@@ -71,10 +71,15 @@ export default class Session extends Component {
     //         console.log(error);
     //     }
     // }
+    onChangevcc(e){
+        console.log("get" ,e.target.value);
+        this.setState({vcc : e.target.value});
+    }
+
     onSubmitvcc(e){
-        console.log("voltage" ,e.target.vcc.value);
-        axios.get("/voltage",{ params : {
-            voltage : e.target.vcc.value }}).then(res => {
+        console.log("voltage" ,this.state.vcc);
+        axios.get("192.168.1.7/voltage",{ params : {
+            voltage : this.state.vcc }}).then(res => {
             console.log(res.data);
             if(res.data.status == 200)
             {
@@ -84,12 +89,6 @@ export default class Session extends Component {
             {
                 alert("Send value again");
             }
-            // if(res.data.success === true)
-            // {
-                
-            //     console.log("setting slots");
-            //     this.setState({availableSlots : res.data.slots});
-            // }
         });
     }
 
@@ -153,11 +152,7 @@ export default class Session extends Component {
               onChange={this.onChangevcc}
             />
           </div>
-          
-          
-          <div className="form-group">
-            <input type="submit" value="submit" className="btn btn-primary" />
-          </div>
+          <input type="submit" value="submit" className="btn btn-primary" />
         </form>
 
 
