@@ -219,6 +219,36 @@ router.get("/getsession",async (req,res) => {
     res.json({ success : true, res : "success", sessions : result_session, });
 });
 
+router.post("/deleteSession",async(req,res) => {
+
+    username = "k@gmail.com";
+    const sessi = await UserSessions.findById(req.body.session_id);
+    console.log(sessi);
+    let item = sessi.experiments.toObject();
+
+    for(i in item){
+        console.log(item[i]); 
+        const k = await UserExperiment.findById(item[i]);
+        k.remove();
+    }
+
+    const user = await User.findOne({email : username});
+    var idx = user.sessions.indexOf(req.body.session_id);
+    if(idx !== -1)
+    {
+        
+        user.sessions.splice(idx, 1);
+        user.save(function(err,ress) {
+            console.log(ress);
+        });
+    }
+    const ses = await UserSessions.findById(req.body.session_id);
+    ses.remove();
+
+    res.json({ success : true, res : "Session Deleted"});
+});
+
+
 
 module.exports = router;
 

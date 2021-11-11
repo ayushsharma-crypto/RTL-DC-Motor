@@ -50,16 +50,19 @@ export default class SessionsList extends Component {
   //    localStorage.setItem("current_session_id",JSON.stringify(e));
     //  console.log("vvvvvvvvv=== " + e);
       var req = {
-        sessionId : e.target.id.value
+        session_id : e.target.id.value
       };
 
-      // axios.post("http://localhost:4000/booking/deleteSession", req)
-      // .then(response => {
-      //     if(response.data.success === true)
-      //     {
-      //         alert(response.data.res);
-      //     }
-      // });
+      axios.post("http://localhost:4000/booking/deleteSession", req)
+      .then(response => {
+          if(response.data.success === true)
+          {
+              alert(response.data.res);
+              window.location.reload(false);
+          }
+      });
+
+
 
    }
  
