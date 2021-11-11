@@ -56,8 +56,11 @@ export default class Session extends Component {
     constructor() {
         super();
         this.state = {
-            videos: []
+            videos: [],
+            vcc : "",
         };
+        this.onChangevcc = this.onChangevcc.bind(this);
+        this.onSubmitvcc = this.onSubmitvcc.bind(this);
     }
     // async componentDidMount() {
     //     try {
@@ -68,6 +71,28 @@ export default class Session extends Component {
     //         console.log(error);
     //     }
     // }
+    onSubmitvcc(e){
+        console.log("voltage" ,e.target.vcc.value);
+        axios.get("/voltage",{ params : {
+            voltage : e.target.vcc.value }}).then(res => {
+            console.log(res.data);
+            if(res.data.status == 200)
+            {
+                alert("Value sent");
+            }
+            else 
+            {
+                alert("Send value again");
+            }
+            // if(res.data.success === true)
+            // {
+                
+            //     console.log("setting slots");
+            //     this.setState({availableSlots : res.data.slots});
+            // }
+        });
+    }
+
     render() {
         return (
             <div>
@@ -113,6 +138,28 @@ export default class Session extends Component {
                     <input type="submit" value="Stop Session" className="btn btn-danger" />
                     &nbsp;
                     <input type="submit" value="Save Session" className="btn btn-primary" />
+
+                </div>
+                <div>
+
+                <form onSubmit={this.onSubmitvcc}>
+          <div className="form-group">
+            <label>VCC : </label>
+            <input
+              type="text"
+              className="form-control"
+              name = "vcc"
+              value={this.state.vcc}
+              onChange={this.onChangevcc}
+            />
+          </div>
+          
+          
+          <div className="form-group">
+            <input type="submit" value="submit" className="btn btn-primary" />
+          </div>
+        </form>
+
 
                 </div>
                 <br/>

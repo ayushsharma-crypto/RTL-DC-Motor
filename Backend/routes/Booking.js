@@ -231,12 +231,19 @@ router.post("/deleteSession",async(req,res) => {
         const k = await UserExperiment.findById(item[i]);
         k.remove();
     }
-
+    const slot = await Session.findOne({date : sessi.sessionDate});
+    var idxx = slot.slots.indexOf(sessi.starttime);
+    if(idx !== -1)
+    {
+        slot.slots.splice(idxx, 1);
+        slot.save(function(err,ress) {
+            console.log(ress);
+        });
+    }
     const user = await User.findOne({email : username});
     var idx = user.sessions.indexOf(req.body.session_id);
     if(idx !== -1)
     {
-        
         user.sessions.splice(idx, 1);
         user.save(function(err,ress) {
             console.log(ress);
