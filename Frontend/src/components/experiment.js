@@ -8,46 +8,46 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "r
 
 var data = [
     {
-      name: "Page A",
-      uv: 4000,
-      pv: 2400,
-      amt: 2400
+      // name: "Page A",
+      RPM: 4000,
+      Voltage: 2400,
+      Avg_Current: 2400
     },
     {
       name: "Page B",
-      uv: 3000,
-      pv: 1398,
-      amt: 2210
+      RPM: 3000,
+      Voltage: 1398,
+      Avg_Current: 2210
     },
     {
       name: "Page C",
-      uv: 2000,
-      pv: 9800,
-      amt: 2290
+      RPM: 2000,
+      Voltage: 9800,
+      Avg_Current: 2290
     },
     {
       name: "Page D",
-      uv: 2780,
-      pv: 3908,
-      amt: 2000
+      RPM: 2780,
+      Voltage: 3908,
+      Avg_Current: 2000
     },
     {
       name: "Page E",
-      uv: 1890,
-      pv: 4800,
-      amt: 2181
+      RPM: 1890,
+      Voltage: 4800,
+      Avg_Current: 2181
     },
     {
       name: "Page F",
-      uv: 2390,
-      pv: 3800,
-      amt: 2500
+      RPM: 2390,
+      Voltage: 3800,
+      Avg_Current: 2500
     },
     {
       name: "Page G",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100
+      RPM: 3490,
+      Voltage: 4300,
+      Avg_Current: 2100
     }
   ];
 
@@ -109,11 +109,11 @@ export default class Experiment extends Component {
 
                 <br/>
                 <br/>
-                <h1>Experiment {this.state.data.name}</h1>
+                <h1>Experiment Analysis{this.state.data.name}</h1>
                 <br/>
                 <br/>
                 <div class = "graph">
-                    <LineChart
+                    {/* <LineChart
                         width={500}
                         height={300}
                         data={data}
@@ -131,12 +131,25 @@ export default class Experiment extends Component {
                         <Legend />
                         <Line
                             type="monotone"
-                            dataKey="pv"
+                            dataKey="RPM"
                             stroke="#8884d8"
                             activeDot={{ r: 8 }}
                         />
-                        <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-                    </LineChart>     
+                        <Line type="monotone" dataKey="Voltage" stroke="#82ca9d" />
+                    </LineChart>      */}
+
+                <LineChart width={600} height={400} data={data}>
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <XAxis dataKey="Voltage" />
+                    <YAxis yAxisId="left-axis" />
+                    <YAxis yAxisId="right-axis" orientation="right" />
+                    <Tooltip />
+                    <Legend />
+                    <Line yAxisId="left-axis" type="monotone" dataKey="RPM" 
+                    stroke="green"/>
+                    <Line yAxisId="right-axis" type="monotone" dataKey="Avg_Current" 
+                    stroke="red" />
+                  </LineChart>
                 </div>
                 
                 <table className="table table-striped">
