@@ -67,6 +67,7 @@ export default class ExperimentsList extends Component {
         };
         
         DeleteExperimentById(req);
+        
     }
     
 

@@ -24,6 +24,7 @@ var data = [
       Voltage: 9800,
       Avg_Current: 2290
     },
+      // name: "Page A",
     {
       name: "Page D",
       RPM: 2780,
