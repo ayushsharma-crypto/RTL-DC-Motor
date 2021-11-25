@@ -10,8 +10,7 @@ import Login from "./login";
 export default class Home extends Component {
   constructor(props) {
     super(props);
-
-  }
+}
 
   componentDidMount() {
     localStorage.clear();
@@ -21,12 +20,13 @@ export default class Home extends Component {
     return (
       <div>
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+        
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mr-auto">
-            <Link to="/" className="navbar-brand">Home</Link>
-            <Link to="/login" className="nav-link">Sign In</Link>
-            <Link to="/register" className="nav-link">Sign Up</Link>
+            {/* <Link to="/" className="navbar-brand">Home</Link>
+            <Link to="/login" className="nav-link">Sign In</Link> */}
+            <Link to="/register" className="nav-link">Create New User</Link>
             </Nav>
 
           </Navbar.Collapse>

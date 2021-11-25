@@ -6,32 +6,56 @@ const PORT = 4000;
 const DB_NAME = "dcmotorDB";
 const dotenv = require('dotenv');
 const cors = require("cors");
-
 var session = require("express-session")
 
+// Cross-Origin approval and app-use
+// var corsOptions = {
+    // origin: " http://localhost:3000",
+//     optionsSuccessStatus: 200 ,// some legacy browsers (IE11, various SmartTVs) choke on 204
+//     credentials: true,
+// }
 
-// app.use(cors());
-app.use(express.json());  
-app.use(express.urlencoded({ extended: true }));
-dotenv.config();
+/* 
+    Define Session time for User
+*/
 
-// setup for authentication
 app.use(session({
     secret: `${process.env.SECRET}`,
     resave: true,
     saveUninitialized: true,
     cookie: { maxAge: 60 * 60 * 1000 } // 1 hour
 }));
+
+app.use(cors({
+    origin: " http://localhost:3000",
+    credentials: true
+}));
+
+
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(express.json());  
+app.use(express.urlencoded({ extended: true }));
+dotenv.config();
+
+
+
+
+
+// setup for authentication
+
+
+
+
 
 app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    // res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
-});
+    });
+    
 
 
 

@@ -5,6 +5,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from 'react-bootstrap/Navbar';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { GoogleLogin } from 'react-google-login';
+import { signupData } from "../Sources/Auth";
 
 
 export default class Register extends Component {
@@ -51,24 +52,30 @@ export default class Register extends Component {
         email: this.state.email,
     };
 
-
     console.log(newUser);
-
-    axios.post("http://localhost:4000/user/signup", newUser).then(res => {
-      console.log("Adding: \n");
-      console.log(res.data);
-      if(res.data.success === false)
-        alert("This email-id has already been taken! Try with a different email-id");
-      else
-      {
-        localStorage.removeItem("currentUser");
-        localStorage.setItem('currentUser',JSON.stringify(res.data.email));
-        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        console.log("setting local storage as: \n");
-        console.log(currentUser.email);
-        this.props.history.push("/sessionsList");
-      }
-    });
+    signupData(newUser);
+    // print(newUser)
+    // axios.post("http://localhost:4000/user/signup", JSON.stringify(newUser),{
+    //   headers:{ 
+    //       'Content-Type': 'application/json',
+    //       // 'Access-Control-Allow-Origin': '*'
+    //    }
+    // }
+    // ).then(res => {
+    //   console.log("Adding: \n");
+    //   console.log(res.data);
+    //   if(res.data.success === false)
+    //     alert("This email-id has already been taken! Try with a different email-id");
+    //   else
+    //   {
+    //     localStorage.removeItem("currentUser");
+    //     localStorage.setItem('currentUser',JSON.stringify(res.data.email));
+    //     var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    //     console.log("setting local storage as: \n");
+    //     console.log(currentUser.email);
+    //     this.props.history.push("/sessionsList");
+    //   }
+    // });
 
 
     this.setState({

@@ -4,7 +4,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from 'react-bootstrap/Navbar';
 import axios from "axios";
 import { GoogleLogin } from 'react-google-login';
-
+import { signupData } from "../Sources/Auth"
 export default class Login extends Component {
   constructor(props) {
     super(props);
@@ -15,45 +15,45 @@ export default class Login extends Component {
     };
     this.onChangeEmail = this.onChangeEmail.bind(this);
     this.onChangePassword = this.onChangePassword.bind(this);
-    this.responseGoogle = this.responseGoogle.bind(this);
+    // this.responseGoogle = this.responseGoogle.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  responseGoogle=(response)=>
-  {
-    // console.log(response);
-    console.log(response.profileObj);
+  // responseGoogle=(response)=>
+  // {
+  //   // console.log(response);
+  //   console.log(response.profileObj);
     
-    this.setState({email: response.profileObj.email});
-    this.setState({ password: response.profileObj.googleId});
+  //   this.setState({email: response.profileObj.email});
+  //   this.setState({ password: response.profileObj.googleId});
 
-    const newUser = {
-      email: this.state.email,
-      password: this.state.password
-    };
+  //   const newUser = {
+  //     email: this.state.email,
+  //     password: this.state.password
+  //   };
 
-    console.log(newUser);
+    // console.log(newUser);
 
-    axios.post("http://localhost:4000/user/signin", newUser).then(res => {
-      console.log(res)
-      if (res.data.success === true) {
-        localStorage.setItem("currentUser",JSON.stringify(res.data.email));
-        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        console.log("loginid = "+ currentUser.email);
-        // this.props.history.push("/UserHome");
-      }
-      else
-      {
-        alert(res.data.res);
-      }
-    });
+    // axios.post("http://localhost:4000/user/signin", newUser).then(res => {
+    //   console.log(res)
+    //   if (res.data.success === true) {
+    //     localStorage.setItem("currentUser",JSON.stringify(res.data.email));
+    //     var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    //     console.log("loginid = "+ currentUser.email);
+    //     // this.props.history.push("/UserHome");
+    //   }
+    //   else
+    //   {
+    //     alert(res.data.res);
+    //   }
+    // });
 
-    this.props.history.push("/sessionsList");
-
-
+    // this.props.history.push("/sessionsList");
 
 
-  }
+
+
+  // }
 
   onChangeEmail(event) {
     this.setState({ email: event.target.value });

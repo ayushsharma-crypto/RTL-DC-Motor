@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import Button from 'react-bootstrap/Button'
 import Navbar from 'react-bootstrap/Navbar'
- 
+import { GetBookedSession } from "../Sources/Auth";
 export default class SessionsList extends Component {
  
    constructor(props) {
@@ -20,18 +20,14 @@ export default class SessionsList extends Component {
  
     
  
-     componentDidMount() {
+     async componentDidMount() {
        var user_email = JSON.parse(localStorage.getItem('currentUser'));
        console.log("going to get sessions");
-       axios.get("http://localhost:4000/booking/getsession", user_email)
-       .then(response => {
-           if(response.data.success === true)
-           {
-               console.log(response.data.sessions);
-               this.setState({sessions : response.data.sessions});
-           }
-       });
-
+       /**
+        * Function to get sessiondata 
+        */
+        var session = await GetBookedSession();
+        this.setState({sessions : session});
      }
  
      

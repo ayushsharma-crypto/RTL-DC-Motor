@@ -97,10 +97,10 @@ router.get("/", function(req, res) {
 
 // POST request 
 // Sign UP
-router.post('/signup', function(req, res, next) {
-    console.log('Checkpoint1');
+router.post('/signup', async function(req, res, next) {
+    await console.log("NEWUSER")
     passport.authenticate('local-signup', function(err, user, info) {
-        console.log('Checkpoint');
+        // console.log('Checkpoint');
         let response = {
             success : false,
             res : "",
@@ -125,7 +125,8 @@ router.post('/signup', function(req, res, next) {
          
       }
     })(req, res, next);
-  });
+  }
+);
   
 
 // POST request 

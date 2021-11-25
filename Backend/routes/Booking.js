@@ -156,13 +156,13 @@ router.post("/createxperiment",async (req,res)=>{
 });
 
 
-function GetUsername(req){
-    const username = GetUsername(req)
-    const base64Credentials = req.headers.authorization.split(' ')[1];
-    const credentials = Buffer.from(base64Credentials, 'base64').toString('utf8');
-    const [username,password] = credentials.split(':');
-    return username;
-}
+// function GetUsername(req){
+//     // const username = GetUsername(req)
+//     const base64Credentials = req.headers.authorization.split(' ')[1];
+//     const credentials = Buffer.from(base64Credentials, 'base64').toString('utf8');
+//     const [username,password] = credentials.split(':');
+//     return username;
+// }
 
 router.post("/experimentdata",async (req,res)=>{
     const data = await Userexperiment.findOne({ _id : req.body.experiment_id});
@@ -202,6 +202,7 @@ router.post("/getExperiment",async (req,res) => {
 
 router.get("/getsession",async (req,res) => {
     username = "k@gmail.com"
+    // GetUsername(req)
     let user = await User.findOne({email : username});
     let result_session = [];
     let list = user.sessions.toObject(); 
@@ -215,7 +216,7 @@ router.get("/getsession",async (req,res) => {
             sessionId : list[sess],
         });
     }
-    
+    console.log(result_session);
     res.json({ success : true, res : "success", sessions : result_session, });
 });
 

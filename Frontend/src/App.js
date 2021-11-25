@@ -14,6 +14,7 @@ import RequestSession from './components/requestSession';
 import SessionsList from './components/sessionsList'
 import ExperimentsList from './components/experimentsList'
 import Experiment from './components/experiment'
+import AdminHandler from './components/Admin-Handler'
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
         <Route path="/sessionsList" component={SessionsList}/>
         <Route path="/experimentsList" component={ExperimentsList}/>
         <Route path="/experiment" component={Experiment}/>
+        <Route path="/Admin-Handler" component={AdminHandler}/>
 
 
         </div>

@@ -8,6 +8,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Moment from 'react-moment';
 import moment from 'moment';
+import { GetUnBookedSessions,BookSession } from "../Sources/Auth";  
 export default class RequestSession extends Component {
 
     constructor(props) {
@@ -36,37 +37,18 @@ export default class RequestSession extends Component {
         console.log(sessionTime.target.value);
         this.setState({sessionTime : sessionTime.target.value});
       }
-      onChangeSessionDate(momentDate) {
+    async onChangeSessionDate(momentDate) {
         console.log("value:\n");
         var date = momentDate ? moment(momentDate).format('YYYY-MM-DD') : undefined;
-        // set state for session time
-        // console.log("Hello : " , date);
         this.setState({ sessionDate: momentDate });
         this.setState({StartDate : date});
-        // console.log(date);
-        
-        // let session = 
-        // {
-        //     params: {
-        //         date : date,
-        //     }
-        // }
-        
-        
+        var Data = {date : String(date)};
 
-        axios.get("http://localhost:4000/booking/getslot",{ params : {
-            date : String(date) }}).then(res => {
-            console.log("Got slots: \n");
-            console.log(res.data);
-            if(res.data.success === true)
-            {
-                console.log("setting slots");
-                this.setState({availableSlots : res.data.slots});
-            }
-        });
-
-
-        console.log(this.state.availableSlots);
+        /*
+         Calling function for get unbooked session in auth.js 
+         */
+        var result =  await GetUnBookedSessions(Data);
+        this.setState({availableSlots : result});
       }
 
       onSubmit(e) {
@@ -80,18 +62,9 @@ export default class RequestSession extends Component {
             starttime : this.state.sessionTime
         };
         console.log(session);
-
-        axios.post("http://localhost:4000/booking/addsession", session).then(res => {
-            console.log("Adding session: \n");
-            console.log(res.data);
-            if(res.data.success === true)
-            {
-                alert(res.data.res);
-                this.props.history.push("/sessionsList");
-            }
-        });
-
         
+        /** Function to send data for booking*/
+        BookSession(session);
       }
       
 
