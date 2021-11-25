@@ -67,6 +67,9 @@ export default class SessionsList extends Component {
         * Function to get sessiondata 
         */
         var session = await GetBookedSession();
+        session.sort((a,b) => {
+          return a.sessionDate < b.sessionDate;
+        });
         this.setState({sessions : session, 
           // sessiondate : "ALL",
            sessionsToShow : session
@@ -133,8 +136,8 @@ export default class SessionsList extends Component {
            <table className="table table-striped">
                <thead>
                <tr>
-                   <th>Date</th>
-                   <th>Time</th>
+                   <th>Date(YYYY-MM-DD)</th>
+                   <th>Time(HH:MM)</th>
                    <th>Experiments Link</th>
                    <th>Delete Session</th>
                   
