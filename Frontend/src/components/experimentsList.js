@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import Button from 'react-bootstrap/Button'
 import Navbar from 'react-bootstrap/Navbar'
-
+import { GetExperimentList,CreateNewExperiment,DeleteExperimentById } from "../Sources/Auth";    
 export default class ExperimentsList extends Component {
 
     constructor(props) {
@@ -14,6 +14,7 @@ export default class ExperimentsList extends Component {
         this.state = {
           email: "",
           experiments : [],
+          sessionId : "",
         };
         // this.onCreateExperiment= this.onCreateExperiment.bind(this);
         this.onClickLink = this.onClickLink.bind(this);
@@ -21,62 +22,30 @@ export default class ExperimentsList extends Component {
         this.deleteExperiment = this.deleteExperiment.bind(this);
       }
     
-      componentDidMount() {
+      async componentDidMount() {
         var sess_id  = this.props.location.state.id;
+        this.setState({sessionId : sess_id});
         var user_email = JSON.parse(localStorage.getItem('currentUser'));
         console.log('sessID = ' + sess_id);
         console.log("going to get sessions");
         var req = {
             session_id : sess_id
         };
-        axios.post("http://localhost:4000/booking/getExperiment", req)
-        .then(response => {
-            if(response.data.success === true)
-            {
-                console.log(response.data.experiments);
-                this.setState({experiments : response.data.experiments});
-            }
-        });
+        this.setState({experiments : await GetExperimentList(req)});
       }
 
       async onSubmit(e) {
+
         e.preventDefault();
         console.log('onononn');
         var currentUser = JSON.parse(localStorage.getItem('currentUser'));
         this.setState({ email : currentUser});
-
-        var exp = {
-            email : currentUser
-        };
-
-        await axios.post("http://localhost:4000/booking/createxperiment", exp).then(res => {
-            console.log("Creating: \n");
-            console.log(res.data);
-            if(res.data.success === true)
-            {
-                // this.props.history.push("/session");
-
-                axios.post("http://127.0.0.1:8080/~/in-cse/in-name/AE-RTL-MOTOR", {
-                    "m2m:cnt":{
-                        "rn": res.data.res,
-                        "mni": 120
-                    }
-                });
-
-                this.props.history.push({
-                    pathname: "/session",
-                    state: { experiment_id :  res.data.res}
-                  });
-            }
-            else
-            {
-                alert(res.data.res);
-            }
-        });
-
         
-
-
+        var exp = {
+            email : currentUser,
+            session_Id : this.state.sessionId,
+        };
+        await CreateNewExperiment(exp)
     }
 
 
@@ -97,14 +66,7 @@ export default class ExperimentsList extends Component {
           session_id : sess_id,
         };
         
-        axios.post("http://localhost:4000/booking/deleteExperiment", req)
-        .then(response => {
-            if(response.data.success === true)
-            {
-                alert(response.data.res);
-                window.location.reload(false);
-            }
-        });
+        DeleteExperimentById(req);
     }
     
 

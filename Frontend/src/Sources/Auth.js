@@ -115,3 +115,127 @@ export async function GetBookedSession(){
   });
 }
 
+export async function DeleteSession(req){
+  return new Promise((resolve,reject) => {
+    try {
+      axios.post("http://localhost:4000/booking/deleteSession", req)
+      .then(response => {
+          if(response.data.success === true)
+          {
+              alert(response.data.res);
+              window.location.href="http://localhost:3000/sessionsList";
+          }
+          else 
+          {
+            alert("Not able to Delete Data");
+          }
+      });
+    }
+   catch (error) {
+        alert("Request Not Sent");
+    }
+  });
+}
+
+export async function GetExperimentDataById(req){
+  return new Promise((resolve,reject) => {
+    try {
+      axios.post("http://localhost:4000/booking/experimentdata", req)
+    .then(response => {
+        if(response.data.success === true)
+        {
+            console.log(response.data.data);
+            resolve(response.data.data);
+        }
+    });
+    }
+   catch (error) {
+        alert("Request Not Sent");
+    }
+  });
+}
+
+export async function GetExperimentList(req){
+  return new Promise((resolve,reject) => {
+    try {
+      axios.post("http://localhost:4000/booking/getExperiment", req)
+        .then(response => {
+            if(response.data.success === true)
+            {
+                console.log(response.data.experiments);
+                resolve(response.data.experiments)
+
+            }
+        });
+    }
+   catch (error) {
+        alert("Request Not Sent");
+    }
+  });
+}
+
+export async function CreateNewExperiment(exp){
+  return new Promise((resolve,reject) => {
+    try {
+      axios.post("http://localhost:4000/booking/createxperiment", exp).then(res => {
+            console.log("Creating: \n");
+            console.log(res.data);
+            if(res.data.success === true)
+            {
+              try{
+                axios.post("http://127.0.0.1:8080/~/in-cse/in-name/AE-RTL-MOTOR", {
+                    "m2m:cnt":{
+                        "rn": res.data.res,
+                        "mni": 120
+                    }
+                });
+
+                this.props.history.push({
+                    pathname: "http://localhost:4000/session",
+                    state: { experiment_id :  res.data.res}
+                  });
+              }
+              catch {
+                DeleteExperimentById({
+                  experiment_id : res.data.res,
+                  session_id : exp.session_Id,
+                });
+                alert("ERROR: PLease create New experiment, Couldn't connect to sensors");
+              }
+                
+            }
+            else
+            {
+                alert(res.data.res);
+            }
+        });
+    }
+   catch (error) {
+        alert("Request Not Sent");
+    }
+  });
+}
+
+export async function DeleteExperimentById(req){
+  return new Promise((resolve,reject) => {
+    try {
+      axios.post("http://localhost:4000/booking/deleteExperiment", req)
+        .then(response => {
+            if(response.data.success === true)
+            {
+                alert(response.data.res);
+                window.location.reload(false);
+            }
+            else 
+            {
+                alert("Unable to Delete");
+            }
+        });
+    }
+   catch (error) {
+        alert("Request Not Sent");
+    }
+  });
+}
+
+// 

@@ -5,7 +5,7 @@ import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import Button from 'react-bootstrap/Button'
 import Navbar from 'react-bootstrap/Navbar'
-import { GetBookedSession } from "../Sources/Auth";
+import { GetBookedSession,DeleteSession } from "../Sources/Auth";
 export default class SessionsList extends Component {
  
    constructor(props) {
@@ -41,22 +41,15 @@ export default class SessionsList extends Component {
       })
      }
 
-     deleteSession(e) {
+    async deleteSession(e) {
       e.preventDefault();
   //    localStorage.setItem("current_session_id",JSON.stringify(e));
     //  console.log("vvvvvvvvv=== " + e);
       var req = {
         session_id : e.target.id.value
       };
-
-      axios.post("http://localhost:4000/booking/deleteSession", req)
-      .then(response => {
-          if(response.data.success === true)
-          {
-              alert(response.data.res);
-              window.location.reload(false);
-          }
-      });
+      await DeleteSession(req);
+      
 
 
 

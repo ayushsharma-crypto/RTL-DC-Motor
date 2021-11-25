@@ -5,7 +5,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from 'react-bootstrap/Navbar';
 import { Link } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
-
+import { GetExperimentDataById } from "../Sources/Auth";
 var data = [
     {
       // name: "Page A",
@@ -64,19 +64,14 @@ export default class Experiment extends Component {
 
   }
   
-  componentDidMount(){
+  async componentDidMount(){
     var exp_id  = this.props.location.state.id;
     var req = {
       experiment_id : exp_id
     };
-    axios.post("http://localhost:4000/booking/experimentdata", req)
-    .then(response => {
-        if(response.data.success === true)
-        {
-            console.log(response.data.data);
-            this.setState({data : response.data.data});
-        }
-    });
+    var ExperimentData = await GetExperimentDataById(req);
+    this.setState({data : ExperimentData});
+    
   }
 
 
