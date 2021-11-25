@@ -8,7 +8,6 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "r
 import { GetExperimentDataById } from "../Sources/Auth";
 var data = [
     {
-      // name: "Page A",
       RPM: 4000,
       Voltage: 2400,
       Avg_Current: 2400
@@ -59,9 +58,6 @@ export default class Experiment extends Component {
       email: "",
       data : ''
     };
-    // this.onGetData = this.onGetData.bind(this);
-    // this.onSubmit = this.onSubmit.bind(this);
-
   }
   
   async componentDidMount(){
