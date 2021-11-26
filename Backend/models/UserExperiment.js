@@ -5,24 +5,12 @@ const UserSchema = new Schema(
    {
        experimentData: [
          {
-            voltage: {
-              type: String,
-              required: true,
-            }
-          },
-          {
-            calculatedRPM: {
-              type: String,
-              default: null,
-            }
-          },
-          {
-            averageCurrent : {
-              type : String,
-              default : null,
-            }
+          Voltage: String,
+          RPM : String,
+          Avg_Current : String,
           }
          ],
+         time : String,
          description : String,
    }
 );

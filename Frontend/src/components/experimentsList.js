@@ -143,7 +143,7 @@ export default class ExperimentsList extends Component {
                 <thead>
                 <tr>
                     <th>Experiment No.</th>
-                    <th>Experiment ID</th>
+                    <th>Experiment Id</th>
                     {/* <th>Experiment Name</th> */}
                     <th>Link</th>
                     <th>Delete Experiment</th>

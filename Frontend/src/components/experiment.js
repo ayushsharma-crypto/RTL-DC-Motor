@@ -89,7 +89,6 @@ export default class Experiment extends Component {
                         <Nav className="mr-auto">
                         <Nav.Link href="/requestSession">Request Session    </Nav.Link>
                         <Nav.Link href="/sessionsList">Back to sessions list    </Nav.Link>
-                        
                         {/* <Nav.Link href="/sessionHistory">Session History    </Nav.Link> */}
                         {/* <Navbar.Brand href="/startSession">Start Session    </Navbar.Brand> */}
                         </Nav>

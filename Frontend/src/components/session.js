@@ -6,7 +6,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import ReactPlayer from 'react-player'
 import { Link } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
-import { checkedLogged } from "../Sources/Auth";
+import { checkedLogged,SaveExperimentData } from "../Sources/Auth";
 // var data = [
 //     {
 //       name: "Page A",
@@ -58,11 +58,13 @@ export default class Session extends Component {
         this.state = {
             videos: [],
             vcc : "",
-            graphData : []
+            graphData : [],
+            savedTime : "",
+            summary : "",
         };
         this.onChangevcc = this.onChangevcc.bind(this);
         this.onSubmitvcc = this.onSubmitvcc.bind(this);
-        
+        this.onChangesummary = this.onChangesummary.bind(this);
 
     }
 
@@ -73,18 +75,23 @@ export default class Session extends Component {
             userEmail : userEmail,
         });
         try {
-            var destination = 'http://127.0.0.1:8080/~/in-cse/in-name/AE-RTL-MOTOR/' + this.props.location.state.experiment_id + '/la';
+            // var destination = 'http://127.0.0.1:8080/~/in-cse/in-name/AE-RTL-MOTOR/' + this.props.location.state.experiment_id + '/la';
 
-            var receivedData = await fetch(destination);
-            var response = await receivedData.json();
-            console.log(response);
-            const val_array = response.split(' ');
+            // var receivedData = await fetch(destination);
+            // var response = await receivedData.json();
+            // console.log(response);
+            // const val_array = response.split(' ');
 
+            // var formattedData = {
+            //     RPM : parseFloat(val_array[0]),
+            //     Voltage : parseFloat(val_array[1]),
+            //     Avg_Current : parseFloat(val_array[2])
+            // };
             var formattedData = {
-                RPM : parseFloat(val_array[0]),
-                Voltage : parseFloat(val_array[1]),
-                Avg_Current : parseFloat(val_array[2])
-            };
+                RPM : "1",
+                Voltage : "1",
+                Avg_Current : "1",
+            }
             // var receivedData = await response.json();
             if(this.state.graphData.length == 6)
             {
@@ -112,6 +119,10 @@ export default class Session extends Component {
         console.log("get" ,e.target.value);
         this.setState({vcc : e.target.value});
     }
+    onChangesummary(e){
+        console.log("get" ,e.target.value);
+        this.setState({summary : e.target.value});
+    }
 
     onSubmitvcc(e){
         e.preventDefault();
@@ -132,6 +143,41 @@ export default class Session extends Component {
             }
         });
     }
+
+    async StopSession(){
+
+        var today = new Date();
+        var request = {
+            expId : this.props.location.state.experiment_id,
+            LastSavedtime : today.getHours()+':'+(today.getMonth()+1)+':'+today.getSeconds(),
+            graphData : this.state.graphData,
+            description : this.state.summary
+        }
+        if(await SaveExperimentData(request))
+        {
+            this.props.history.push({
+                pathname: "/experiment",
+                state: { id : this.props.location.state.experiment_id,}
+              })
+        }
+        else 
+        {
+            alert("Sesstion could not be saved.Please stop again");
+        }
+    }
+
+    async SaveSession(){
+        var today = new Date();
+
+        var request = {
+            expId : this.props.location.state.experiment_id,
+            LastSavedtime : today.getHours()+':'+(today.getMonth()+1)+':'+today.getSeconds(),
+            graphData : this.state.graphData,
+            description : this.state.summary
+        }
+        await SaveExperimentData(request);
+    }
+
     ExperimentRunningOrNot()
     {
         if(this.props.location.state.running)
@@ -180,13 +226,14 @@ export default class Session extends Component {
                     </div>
                     <br/>
                     <br/>
-                    <input type="submit" value="Start Session" className="btn btn-success" />
+                    {/* <input type="submit" value="Start Session" className="btn btn-success" />
                     &nbsp;
                     <input type="submit" value="Stop Session" className="btn btn-danger" />
-                    &nbsp;
+                    &nbsp; */}
                     
-                    <input type="submit" value="Save Session" className="btn btn-primary" />
-
+                    {/* <input type="submit" value="Save Session" className="btn btn-primary" /> */}
+                    <button onClick={() => this.StopSession()}>Stop Experiment</button>
+                    <button onClick={() => this.SaveSession()}>Save Experiment</button>
                 </div>
                 <div>
                 {this.ExperimentRunningOrNot() 
@@ -206,6 +253,11 @@ export default class Session extends Component {
                     <input type="submit" value="submit" className="btn btn-primary" />
                 </div>
                 </form>}
+                Add Experiment Summary: 
+                {this.ExperimentRunningOrNot() 
+                && 
+                  <textarea value={this.state.summary} onChange={this.onChangesummary} />
+                }
                 
 
 

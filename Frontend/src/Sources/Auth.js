@@ -259,4 +259,29 @@ export async function DeleteExperimentById(req){
   });
 }
 
+
+export async function SaveExperimentData(request){
+  return new Promise((resolve,reject) => {
+    try {
+      axios.post("http://localhost:4000/booking/saveExperiment", request)
+        .then(response => {
+            if(response.data.success === true)
+            {
+                alert(response.data.res);
+                resolve(response.data.success);
+            }
+            else 
+            {
+              resolve(response.data.success);
+                alert("Unable to Save Data, please try again");
+            }
+        });
+    }
+   catch (error) {
+        alert("Request Not Sent");
+    }
+  });
+
+}
+
 // 

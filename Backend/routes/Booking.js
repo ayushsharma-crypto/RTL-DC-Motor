@@ -322,9 +322,25 @@ router.post("/deleteExperiment", async(req,res) => {
 });
 
 router.post("/saveExperiment",async(req,res) => {
-    var expData = req.body.experimentDate;
     var expId = req.body.expId;
-     
+    var expTime = req.body.LastSavedtime;
+    var graphData = req.body.graphData;
+    var description = req.body.description;
+    let exp = await UserExperiment.findById(expId);
+    console.log(exp);
+    exp.time = expTime;
+    exp.experimentData = graphData;
+    exp.description = description;
+    await exp.save().then((exp,err) => {
+        if(err)
+        {
+            res.json({success : false, data : "Data saved Successfully "});
+        }
+        else 
+        {
+            res.json({success : true, res : " Data saved successfully"});
+        }
+    });
 });
 
 
