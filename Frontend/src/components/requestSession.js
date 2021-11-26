@@ -8,7 +8,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Moment from 'react-moment';
 import moment from 'moment';
-import { GetUnBookedSessions,BookSession } from "../Sources/Auth";  
+import { GetUnBookedSessions,BookSession,checkedLogged } from "../Sources/Auth";  
 export default class RequestSession extends Component {
 
     constructor(props) {
@@ -20,7 +20,8 @@ export default class RequestSession extends Component {
           sessionDate: "",
           StartDate: "",
           availableSlots : [],
-          sessionTime : "01:00"
+          sessionTime : "01:00",
+          userEmail : "",
         };
 
         this.onChangeSessionDate= this.onChangeSessionDate.bind(this);
@@ -29,7 +30,12 @@ export default class RequestSession extends Component {
       }
 
 
-
+      async componentDidMount() {
+          console.log("print");
+        var userEmail = await checkedLogged();
+        if(userEmail == "") return;
+        this.setState({userEmail : userEmail})
+      }
 
 
     onChangeSessionTime(sessionTime) {
@@ -40,6 +46,13 @@ export default class RequestSession extends Component {
     async onChangeSessionDate(momentDate) {
         console.log("value:\n");
         var date = momentDate ? moment(momentDate).format('YYYY-MM-DD') : undefined;
+        var todayDate = moment(new Date()).format('YYYY-MM-DD');
+        if(date < todayDate)
+        {
+            alert("Please select today's or upcomming date");
+            return;
+        }
+
         this.setState({ sessionDate: momentDate });
         this.setState({StartDate : date});
         var Data = {date : String(date)};
@@ -48,18 +61,19 @@ export default class RequestSession extends Component {
          Calling function for get unbooked session in auth.js 
          */
         var result =  await GetUnBookedSessions(Data);
-        this.setState({availableSlots : result});
+        this.setState({availableSlots : result,sessionTime : result[0]});
       }
+
 
       onSubmit(e) {
         e.preventDefault();
         // add session to db
         // and redirect to homepage
-
         console.log("Submitting");
         let session = {
             date : this.state.StartDate,
-            starttime : this.state.sessionTime
+            starttime : this.state.sessionTime,
+            userEmail : this.state.userEmail,
         };
         console.log(session);
         

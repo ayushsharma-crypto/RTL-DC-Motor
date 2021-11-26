@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
-import React from 'react';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import React,{ Component } from 'react';
+import { BrowserRouter as Router, Route, Link ,Redirect} from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css"
 
 // import UsersList from './components/allusers'
@@ -15,7 +15,26 @@ import SessionsList from './components/sessionsList'
 import ExperimentsList from './components/experimentsList'
 import Experiment from './components/experiment'
 import AdminHandler from './components/Admin-Handler'
-
+import {checkedLogged} from  './Sources/Auth'
+import Switch from 'react-bootstrap/esm/Switch';
+// class ProtectedRoute extends Component {
+  
+//   render() {
+//     const { component: Component, ...props } = this.props
+//     var user = checkedLogged();
+//     console.log("USER",user);
+//     return (
+//       <Route 
+//         {...props} 
+//         render={props => (
+//           user ?
+//             <Component {...props} /> :
+//             <Redirect to='/login' />
+//         )} 
+//       />
+//     )
+//   }
+// }
 
 function App() {
   return (

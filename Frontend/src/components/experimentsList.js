@@ -5,7 +5,8 @@ import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import Button from 'react-bootstrap/Button'
 import Navbar from 'react-bootstrap/Navbar'
-import { GetExperimentList,CreateNewExperiment,DeleteExperimentById } from "../Sources/Auth";    
+// import { Alert } from 'react-native';
+import { GetExperimentList,CreateNewExperiment,DeleteExperimentById,checkedLogged } from "../Sources/Auth";    
 export default class ExperimentsList extends Component {
 
     constructor(props) {
@@ -15,6 +16,7 @@ export default class ExperimentsList extends Component {
           email: "",
           experiments : [],
           sessionId : "",
+          description : "",
         };
         // this.onCreateExperiment= this.onCreateExperiment.bind(this);
         this.onClickLink = this.onClickLink.bind(this);
@@ -23,13 +25,19 @@ export default class ExperimentsList extends Component {
       }
     
       async componentDidMount() {
+          var user_email = await checkedLogged();
+          if(user_email == "") return;
+          this.setState({
+            email : user_email,
+          });
         var sess_id  = this.props.location.state.id;
         this.setState({sessionId : sess_id});
-        var user_email = JSON.parse(localStorage.getItem('currentUser'));
+        // var user_email = JSON.parse(localStorage.getItem('currentUser'));
         console.log('sessID = ' + sess_id);
         console.log("going to get sessions");
         var req = {
-            session_id : sess_id
+            session_id : sess_id,
+            userEmail : user_email,
         };
         this.setState({experiments : await GetExperimentList(req)});
       }
@@ -38,31 +46,40 @@ export default class ExperimentsList extends Component {
 
         e.preventDefault();
         console.log('onononn');
-        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.setState({ email : currentUser});
         
         var exp = {
-            email : currentUser,
+            email : this.state.email,
             session_Id : this.state.sessionId,
         };
-        await CreateNewExperiment(exp)
+
+        var data = await CreateNewExperiment(exp)
+        console.log(data);
+        this.props.history.push({
+            pathname: "/session",
+            state: { experiment_id :  data,
+            running : this.props.location.state.running}
+          });
     }
 
 
     onClickLink(e){
-        e.preventDefault();
+        // e.preventDefault();
         this.props.history.push({
             pathname: "/experiment",
-            state: { experiment_id : e.target.id.value }
+            // state: { experiment_id : e.target.id.value }
+            state: { experiment_id : e,
+                running : this.props.location.state.running,
+             }
           })
     }
 
 
     deleteExperiment(e) {
-        e.preventDefault();
+        // e.preventDefault();
         var sess_id  = this.props.location.state.id;
         var req = {
-          experiment_id : e.target.id.value,
+        //   experiment_id : e.target.id.value,
+        experiment_id : e,
           session_id : sess_id,
         };
         
@@ -71,7 +88,20 @@ export default class ExperimentsList extends Component {
     }
     
 
-
+    CreateExperimentOrNot()
+    {
+        // console.log("Print");
+        console.log(this.props.location.state.running);
+        if(this.props.location.state.running)
+        {
+                return (<form onSubmit={this.onSubmit}>
+                    <div className="form-group">
+                        <input type="submit" value="Create Experiment" className="btn btn-primary" />
+                    </div>
+                </form>)
+            
+        }
+    }
 
 
 
@@ -95,11 +125,16 @@ export default class ExperimentsList extends Component {
             {/* <form onSubmit={this.onCreateExperiment}>
                 <button className='btn-primary' type="submit">Create Experiment</button>
             </form> */}
-            <form onSubmit={this.onSubmit}>
+            
+            {this.CreateExperimentOrNot()}
+             
+                {/* <form onSubmit={this.onSubmit}>
                 <div className="form-group">
                     <input type="submit" value="Create Experiment" className="btn btn-primary" />
                 </div>
-            </form>
+            </form> */}
+            
+            
             <br/>
             
             <h1>Experiments: </h1> 
@@ -107,6 +142,7 @@ export default class ExperimentsList extends Component {
             <table className="table table-striped">
                 <thead>
                 <tr>
+                    <th>Experiment No.</th>
                     <th>Experiment ID</th>
                     {/* <th>Experiment Name</th> */}
                     <th>Link</th>
@@ -119,25 +155,28 @@ export default class ExperimentsList extends Component {
                 this.state.experiments.map((j, i) => {
                     return (
                     <tr>
+                        <td>{i+1}</td>
                         <td>{j.ExperimentId}</td>
                         {/* <td>{j.sessionStartTime}</td> */}
                         <td>
-                        <form onSubmit={this.onClickLink}>
+                        <button onClick={() => this.onClickLink(j.ExperimentId)}>Enter</button>
+                        {/* <form onSubmit={this.onClickLink}>
                             <div className="form-group">
                                 <input type="submit" name="id" value={j.ExperimentId} className="btn btn-primary" />
                             </div>
-                        </form>
+                        </form> */}
 
 
                             {/* <button onClick={this.viewExperiments(j.sessionId)}>{j.sessionId}</button> */}
                         {/* <Button className="btn btn-primary" value={j.sessionId} /> */}
                         </td>
                         <td>
-                        <form onSubmit={this.deleteExperiment}>
+                        <button onClick={() => this.deleteExperiment(j.ExperimentId)}>Delete</button>
+                        {/* <form onSubmit={this.deleteExperiment}>
                             <div className="form-group">
                                 <input type="submit" name="id" value={j.ExperimentId} className="btn btn-danger" />
                             </div>
-                        </form>
+                        </form> */}
 
                         </td>
                     </tr>

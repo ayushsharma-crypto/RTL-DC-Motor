@@ -6,7 +6,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import ReactPlayer from 'react-player'
 import { Link } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
-
+import { checkedLogged } from "../Sources/Auth";
 // var data = [
 //     {
 //       name: "Page A",
@@ -67,6 +67,11 @@ export default class Session extends Component {
     }
 
     async componentDidMount() {
+        var userEmail = await checkedLogged();
+        if(userEmail == "") return;
+        this.setState({
+            userEmail : userEmail,
+        });
         try {
             var destination = 'http://127.0.0.1:8080/~/in-cse/in-name/AE-RTL-MOTOR/' + this.props.location.state.experiment_id + '/la';
 
@@ -127,7 +132,14 @@ export default class Session extends Component {
             }
         });
     }
-
+    ExperimentRunningOrNot()
+    {
+        if(this.props.location.state.running)
+        {
+            return true;
+        }
+        return false;
+    }
     render() {
         return (
             <div>
@@ -172,11 +184,13 @@ export default class Session extends Component {
                     &nbsp;
                     <input type="submit" value="Stop Session" className="btn btn-danger" />
                     &nbsp;
+                    
                     <input type="submit" value="Save Session" className="btn btn-primary" />
 
                 </div>
                 <div>
-
+                {this.ExperimentRunningOrNot() 
+                && 
                 <form onSubmit={this.onSubmitvcc}>
                 <div className="form-group">
                     <label>VCC : </label>
@@ -191,7 +205,8 @@ export default class Session extends Component {
                 <div className="form-group">
                     <input type="submit" value="submit" className="btn btn-primary" />
                 </div>
-                </form>
+                </form>}
+                
 
 
                 </div>

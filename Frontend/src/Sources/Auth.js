@@ -1,7 +1,9 @@
 const axios = require('axios');
-axios.defaults.withCredentials = true
+axios.defaults.withCredentials = true;
 
-export function signupData(newUser){
+// export { signupData  };
+export async function signupData(newUser){
+
     axios.post("http://localhost:4000/user/signup", JSON.stringify(newUser),{
       headers:{ 
           'Content-Type': 'application/json',
@@ -26,43 +28,82 @@ export function signupData(newUser){
     });
 }
 
-export function checkedLogged(){
-    axios.get('http://localhost:4000/checklog',{
+export async function checkedLogged(){
+  return new Promise((resolve,reject) =>{
+    console.log("IN CHECKEDLOGGED");
+    axios.get('http://localhost:4000/user/checklog',{
       headers:{ 
           'Content-Type': 'application/json',
        }
     })
     .then(function (response) {
-      // console.log(response);
-        if(response.data.message!=="Authenticated"){
-          window.location.href="http://localhost:5000/signin";
-        }    
+      
+      console.log("IN CHECKED LOGGED THEN");
+      console.log(response.data.user_email);
+        if(response.data.res !== "Authenticated"){
+          window.location.href="http://localhost:3000/login";
+        }
+        else 
+        {
+          resolve(response.data.user_email);
+        }
     })
     .catch(function (error) {
-      console.log(error);
+      console.log("IN CATCH");
     });
-  }
+    
+  });
+  
+}
+
+export async function GetBookedSession(request){
+  return new Promise(async (resolve,reject) => {
+    
+      try {
+      
+        console.log("CHECKEDLOGG");
+        console.log(request);
+        axios.get("http://localhost:4000/booking/getsession",{params : request})
+        .then(response => {
+
+            if(response.data.success === true)
+            {
+                console.log(response.data.sessions);
+                resolve(response.data.sessions);
+            }
+            else
+            {
+              alert("Not able to get session.");
+              window.location.href="http://localhost:3000/sessionsList";
+            }
+        });
+    }
+    catch (error) {
+          alert("Request Not Sent")
+      }
+  });
+}
 
 
 export async function GetUnBookedSessions(Data){
-  return new Promise((resolve,reject) => {
-    try {
-      axios.get("http://localhost:4000/booking/getslot",{ params : Data}).then(res => {
-              console.log("Got slots: \n");
-              console.log(res.data);
-              if(res.data.success === true)
-              {
-                resolve(res.data.slots);
-                  // return res.data.slots;
-              }
-              else {
-                resolve(["error"]);
-                alert("No Data Received");
-              }
-          });  
-    } catch (error) {
-        alert("Request Not Sent")
-    }
+  return new Promise(async (resolve,reject) => {
+      try {
+        axios.get("http://localhost:4000/booking/getslot",{ params : Data}).then(res => {
+                console.log("Got slots: \n");
+                console.log(res.data);
+                if(res.data.success === true)
+                {
+                  resolve(res.data.slots);
+                    // return res.data.slots;
+                }
+                else {
+                  resolve(["error"]);
+                  alert("No Data Received");
+                }
+            });  
+      } catch (error) {
+          alert("Request Not Sent")
+      }
   });
   
 }
@@ -87,36 +128,13 @@ export async function BookSession(session){
    catch (error) {
         alert("Request Not Sent")
     }
-    
-  
   });
 }
 
-export async function GetBookedSession(){
-  return new Promise((resolve,reject) => {
-    try {
-      axios.get("http://localhost:4000/booking/getsession")
-       .then(response => {
-           if(response.data.success === true)
-           {
-               console.log(response.data.sessions);
-               resolve(response.data.sessions);
-           }
-           else
-           {
-            alert("Not able to get session.");
-            window.location.href="http://localhost:3000/sessionsList";
-           }
-      });
-    }
-   catch (error) {
-        alert("Request Not Sent")
-    }
-  });
-}
 
 export async function DeleteSession(req){
   return new Promise((resolve,reject) => {
+    
     try {
       axios.post("http://localhost:4000/booking/deleteSession", req)
       .then(response => {
@@ -182,26 +200,29 @@ export async function CreateNewExperiment(exp){
             console.log(res.data);
             if(res.data.success === true)
             {
-              try{
+              // try{
                 axios.post("http://127.0.0.1:8080/~/in-cse/in-name/AE-RTL-MOTOR", {
                     "m2m:cnt":{
                         "rn": res.data.res,
                         "mni": 120
                     }
                 });
-
-                this.props.history.push({
-                    pathname: "http://localhost:4000/session",
-                    state: { experiment_id :  res.data.res}
-                  });
-              }
-              catch {
-                DeleteExperimentById({
-                  experiment_id : res.data.res,
-                  session_id : exp.session_Id,
-                });
-                alert("ERROR: PLease create New experiment, Couldn't connect to sensors");
-              }
+                
+                // this.props.history.push({
+                //     pathname: "http://localhost:4000/session",
+                //     state: { experiment_id :  res.data.res}
+                //   });
+                resolve(res.data.res);
+              // }
+              // catch {
+                
+                // THIS CODE MUST BE UNCOMMENTED IN FUTURE 
+                // DeleteExperimentById({
+                //   experiment_id : res.data.res,
+                //   session_id : exp.session_Id,
+                // });
+                // alert("ERROR: PLease create New experiment, Couldn't connect to sensors");
+              // }
                 
             }
             else

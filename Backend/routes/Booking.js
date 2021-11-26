@@ -8,11 +8,51 @@ const Userexperiment = require("../models/UserExperiment");
 const Usersessions = require("../models/UserSessions");
 const UserSessions = require("../models/UserSessions");
 const UserExperiment = require("../models/UserExperiment");
+// const { checkedLogged } = require("../../Frontend/src/Sources/Auth");
 
-router.post("/addsession", (req,res) => {
-        var username = 'k@gmail.com';
+router.post("/addsession", async (req,res) => {
+        var username = req.body.userEmail;
+        console.log(req.body);
+        console.log(username);
         var StartTime = req.body.starttime.substring(0,2) + "00";
         var EndTime = req.body.starttime.substring(0,2)  + "59";
+        var response = {
+            success : false,
+            res : "",
+        }
+        // var session = await Session.findOne({
+        //     date : req.body.date,
+        // });
+        // console.log(session);
+        // if(!session)
+        // {
+        //     const newsession = new Session({
+        //         date : req.body.date,
+        //         slots : [],
+        //     }); 
+        //     session = await newsession.save();
+        //     console.log("IN IF");
+        //     console.log(session);
+        // }
+        // console
+        // var sessionSlots = session.slots.toObject();
+        // for (let index = 0; index < sessionSlots.length; index++) {
+        //     const element = sessionSlots[index];
+        //     if(element == StartTime)
+        //     {
+        //         response.success = true;
+        //         response.res = "Session Already Booked";
+        //         return res.json(response);
+        //     }
+        // }
+        // await session.slots.push(StartTime);
+        // await session.save();
+        // console.log(session);
+        // await session.slots.pull(StartTime);
+        // await session.save();
+        // console.log(session);
+        // var user = await User.findOne({email : username});
+        
         Session.findOneAndUpdate(
             {
                 date : req.body.date,
@@ -35,7 +75,7 @@ router.post("/addsession", (req,res) => {
                     },{
                         new: true,
                         rawResult:true,
-                    },function(err,slot) {
+                    },async function(err,slot) {
                         if(slot.lastErrorObject.updatedExisting)
                         {
                             const newSession = new Usersessions({
@@ -45,7 +85,8 @@ router.post("/addsession", (req,res) => {
                                 sessionEndTime : EndTime,
                                 experiment : [],
                             });
-                            newSession.save(function(err,session){
+                            await newSession.save(async function(err,session){
+                                console.log(session);
                                 User.findOneAndUpdate({
                                         email : username,
                                     },{
@@ -78,13 +119,17 @@ function createHour(index)
 
 
 router.get("/getslot",(req,res)=>{
-        
         var filter = {date : req.query.date};
+        var todayTime = new Date().getHours();
         Session.findOne(filter,
          function (err,docs) {
             myArray = []    
             for (let index = 1; index < 24; index++) {
-                myArray.push(createHour(index) + '00');
+                var element = createHour(index);
+                if(createHour(index) >= todayTime)
+                {
+                    myArray.push(createHour(index) + '00');
+                }
             }
             if(docs)
             {
@@ -108,8 +153,9 @@ router.get("/getslot",(req,res)=>{
 });
 
 router.post("/createxperiment",async (req,res)=>{
-
-        var username = 'k@gmail.com';
+        console.log(req.body);
+        var username = req.body.email;
+        console.log(username);
         var datetime = new Date().toLocaleString("en-GB", {timeZone: "Asia/Kolkata"});
         var dateFormat = datetime.substring(6,10)+ '-' + datetime.substring(3,5) + '-' + datetime.substring(0,2);
         var Curr_Time = datetime.substring(12,14);
@@ -175,7 +221,7 @@ router.post("/experimentdata",async (req,res)=>{
 });
 
 router.post("/getExperiment",async (req,res) => {
-    username = "k@gmail.com"
+    username = req.body.userEmail;
     var datetime = new Date().toLocaleString("en-GB", {timeZone: "Asia/Kolkata"});
     var Curr_Time = datetime.substring(12,14);
     console.log(req.body)
@@ -201,7 +247,8 @@ router.post("/getExperiment",async (req,res) => {
 });
 
 router.get("/getsession",async (req,res) => {
-    username = "k@gmail.com"
+    username = req.query.userEmail;
+    // console.log(req.query);
     // GetUsername(req)
     let user = await User.findOne({email : username});
     let result_session = [];
@@ -222,7 +269,7 @@ router.get("/getsession",async (req,res) => {
 
 router.post("/deleteSession",async(req,res) => {
 
-    username = "k@gmail.com";
+    username = req.body.userEmail;
     const sessi = await UserSessions.findById(req.body.session_id);
     console.log(sessi);
     let item = sessi.experiments.toObject();
@@ -274,6 +321,11 @@ router.post("/deleteExperiment", async(req,res) => {
     res.json({ success : true, res : "Experiment Deleted"});
 });
 
+router.post("/saveExperiment",async(req,res) => {
+    var expData = req.body.experimentDate;
+    var expId = req.body.expId;
+     
+});
 
 
 module.exports = router;

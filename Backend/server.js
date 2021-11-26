@@ -26,9 +26,14 @@ app.use(session({
     cookie: { maxAge: 60 * 60 * 1000 } // 1 hour
 }));
 
+/**
+ * Add other Domains in Origin Array for CORS ACCESS
+ */
+// origins = ['http://localhost:3000'];
 app.use(cors({
     origin: 'http://localhost:3000',
     credentials: true,
+    default : 'http://localhost:3000',
 }));
 
 
@@ -49,9 +54,12 @@ dotenv.config();
 
 
 app.use(function (req, res, next) {
-    // res.setHeader('Access-Control-Allow-Origin', '*');
+    // console.log(cors);
+    // var origin = origins.indexOf(req.headers.origin) > -1 ? req.headers.Origin : cors.default;
+    // console.log(origin);
+    // res.setHeader('Access-Control-Allow-Origin', "http://localhost:3000");
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Headers', "Content-Type");
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
     });

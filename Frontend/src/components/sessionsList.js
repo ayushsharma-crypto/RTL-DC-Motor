@@ -9,7 +9,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Moment from 'react-moment';
 import moment from 'moment';
-import { GetBookedSession,DeleteSession } from "../Sources/Auth";
+import { GetBookedSession,DeleteSession,checkedLogged } from "../Sources/Auth";
 export default class SessionsList extends Component {
  
    constructor(props) {
@@ -19,7 +19,7 @@ export default class SessionsList extends Component {
          sessions: [],
          sessionsToShow : [],
          sessionDate : "",
-         
+         userEmail : "",
        };
        this.viewExperiments = this.viewExperiments.bind(this);
        this.deleteSession = this.deleteSession.bind(this);
@@ -61,15 +61,27 @@ export default class SessionsList extends Component {
 
  
      async componentDidMount() {
-       var user_email = JSON.parse(localStorage.getItem('currentUser'));
+       var userEmail = await checkedLogged();
+       console.log(userEmail);
+       if(userEmail == "") return;
+       this.setState({userEmail : userEmail})
        console.log("going to get sessions");
        /**
         * Function to get sessiondata 
         */
-        var session = await GetBookedSession();
+       var request = {
+         userEmail : this.state.userEmail,
+       }
+       console.log(request);
+        var session = await GetBookedSession(request);
         session.sort((a,b) => {
+          if(a.sessionDate == b.sessionDate)
+          {
+            return a.sessionStartTime < b.sessionStartTime;
+          }
           return a.sessionDate < b.sessionDate;
         });
+        
         this.setState({sessions : session, 
           // sessiondate : "ALL",
            sessionsToShow : session
@@ -77,13 +89,15 @@ export default class SessionsList extends Component {
      }
  
      
-     viewExperiments(e) {
+     viewExperiments(e,isRunning) {
         // e.preventDefault();
     //    localStorage.setItem("current_session_id",JSON.stringify(e));
        console.log(e);
        this.props.history.push({
         pathname: "/experimentsList",
-        state: { id : e }
+        state: { id : e,
+        running : isRunning,
+       }
       })
      }
 
@@ -91,13 +105,20 @@ export default class SessionsList extends Component {
       
   //    localStorage.setItem("current_session_id",JSON.stringify(e));
     //  console.log("vvvvvvvvv=== " + e);
-      var req = {
+      var request = {
         session_id : e,
+        userEmail : this.state.userEmail,
       };
-      await DeleteSession(req);
+      await DeleteSession(request);
    }
-
- 
+   CheckRunning(a,b){
+    var today = new Date();
+    if((today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate() == b) && (today.getHours() == a.substring(0,2)))
+    {
+      return true;
+    }
+    return false;
+   }
    render() {
        return (
            <div>
@@ -114,13 +135,15 @@ export default class SessionsList extends Component {
            </Navbar>
            <h1>Sessions: </h1>
            <div>
-             SelectDate: 
+             PickByDate: 
            <DatePicker
 
               selected={this.state.sessionDate}
               // onSelect={this.state.sessionDate} //when day is clicked
               onChange={this.onChangeSessionDate} //only when value has changed
               />
+              
+              
               <button onClick={this.showAll}>
               Show All
               </button>
@@ -136,6 +159,7 @@ export default class SessionsList extends Component {
            <table className="table table-striped">
                <thead>
                <tr>
+                    <th>Session No.</th>
                    <th>Date(YYYY-MM-DD)</th>
                    <th>Time(HH:MM)</th>
                    <th>Experiments Link</th>
@@ -148,10 +172,11 @@ export default class SessionsList extends Component {
            this.state.sessionsToShow.map((j, i) => {
              return (
                <tr>
+                 <td>{i+1}{this.CheckRunning(j.sessionStartTime,j.sessionDate) && <span style={{color : 'Green'}}> Running</span>}</td>
                  <td>{j.sessionDate}</td>
                  <td>{j.sessionStartTime}</td>
                  <td>
-                 <button onClick={() => this.viewExperiments(j.sessionId)}>Enter</button>
+                 <button onClick={() => this.viewExperiments(j.sessionId,this.CheckRunning(j.sessionStartTime,j.sessionDate))}>Enter</button>
                  {/* <form onSubmit={this.viewExperiments}>
                     <div className="form-group">
                         <input type="submit" name="id" value={j.sessionId} placeholder="Enter" className="btn btn-primary" />

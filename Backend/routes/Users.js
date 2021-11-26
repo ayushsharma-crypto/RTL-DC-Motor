@@ -180,19 +180,22 @@ router.get("/signout", function(req, res){
 // GET request 
 // Check Logged or not
 router.get('/checklog',function(req, res){
-    console.log(req.user);
+    console.log("Hello");       
+    // console.log(req);
     if(req.isAuthenticated()){
+        console.log(req.user);
         User.findOne({'email': req.user.email},function(err, user){
             console.log(user);
             if(err){
                 console.log(err);
             }
             else{
-                res.json({success: true, res:"Authenticated",user: user});
+                res.json({success: true, res:"Authenticated",user_email: user.email});
             }
         });
     }
     else{
+        console.log("NOOOO");
         res.json({success: false, res:"Not Authenticated"});
     }
 });
