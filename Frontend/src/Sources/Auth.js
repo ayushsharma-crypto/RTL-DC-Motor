@@ -216,12 +216,13 @@ export async function CreateNewExperiment(exp){
               // }
               // catch {
                 
-                // THIS CODE MUST BE UNCOMMENTED IN FUTURE 
-                // DeleteExperimentById({
-                //   experiment_id : res.data.res,
-                //   session_id : exp.session_Id,
-                // });
-                // alert("ERROR: PLease create New experiment, Couldn't connect to sensors");
+              //   // THIS CODE MUST BE UNCOMMENTED IN FUTURE 
+
+              //   DeleteExperimentById({
+              //     experiment_id : res.data.res,
+              //     session_id : exp.session_Id,
+              //   });
+              //   alert("ERROR: PLease create New experiment, Couldn't connect to sensors");
               // }
                 
             }

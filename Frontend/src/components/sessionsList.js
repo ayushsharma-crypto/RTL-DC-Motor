@@ -74,12 +74,23 @@ export default class SessionsList extends Component {
        }
        console.log(request);
         var session = await GetBookedSession(request);
+        var array = [1,2,3,4]
+        array.sort((a,b) => {
+          return b-a;
+        });
+        console.log(array);
         session.sort((a,b) => {
+          // 2021-11-17 71-11-1202
+          // 2021-11-29 92-11-1202
           if(a.sessionDate == b.sessionDate)
           {
-            return a.sessionStartTime < b.sessionStartTime;
+            if(a.sessionStartTime < b.sessionStartTime) return 1;
+            else return -1;
           }
-          return a.sessionDate < b.sessionDate;
+          // console.log(b.sessionDate-a.sessionDate);
+          if(b.sessionDate>a.sessionDate) return 1;
+          else return -1;
+          // return   b.sessionDate-a.sessionDate;
         });
         
         this.setState({sessions : session, 
