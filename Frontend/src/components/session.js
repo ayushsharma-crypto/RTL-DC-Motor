@@ -256,14 +256,18 @@ export default class Session extends Component {
                     onChange={this.onChangevcc}
                     />
                 </div>
-                {
+                
                 
                 <div className="form-group">
                 <input type="submit" value="submit" className="btn btn-primary" />
                 </div>
-                }
+                
                 
                 </form>}
+                {
+                    this.state.isDisabled && 
+                    <div>Button will be available after 5 sec</div>
+                }
                 Add Experiment Summary: 
                 {this.ExperimentRunningOrNot() 
                 && 
