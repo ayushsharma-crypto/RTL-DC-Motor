@@ -143,7 +143,7 @@ app.post('/makeNewNode', (req, res) => {
         //     Voltage : body.something,
         //     Avg_Current : body.something,
         // }
-        res.json(reps);
+        // res.json(reps);
         }
     )
     });

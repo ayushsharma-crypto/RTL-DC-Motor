@@ -7,50 +7,57 @@ import ReactPlayer from 'react-player'
 import { Link } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 import { checkedLogged,SaveExperimentData } from "../Sources/Auth";
-// var data = [
-//     {
-//       name: "Page A",
-//       uv: 4000,
-//       pv: 2400,
-//       amt: 2400
-//     },
-//     {
-//       name: "Page B",
-//       uv: 3000,
-//       pv: 1398,
-//       amt: 2210
-//     },
-//     {
-//       name: "Page C",
-//       uv: 2000,
-//       pv: 9800,
-//       amt: 2290
-//     },
-//     {
-//       name: "Page D",
-//       uv: 2780,
-//       pv: 3908,
-//       amt: 2000
-//     },
-//     {
-//       name: "Page E",
-//       uv: 1890,
-//       pv: 4800,
-//       amt: 2181
-//     },
-//     {
-//       name: "Page F",
-//       uv: 2390,
-//       pv: 3800,
-//       amt: 2500
-//     },
-//     {
-//       name: "Page G",
-//       uv: 3490,
-//       pv: 4300,
-//       amt: 2100
-//     }
-//   ];
+var ExampleData = [
+    {
+      RPM: 4000,
+      Voltage: 2400,
+      Avg_Current: 2400,
+      TheoriticalRpm : 1000,
+    },
+    {
+      name: "Page B",
+      RPM: 3000,
+      Voltage: 1398,
+      Avg_Current: 2210,
+      TheoriticalRpm : 1000,
+    },
+    {
+      name: "Page C",
+      RPM: 2000,
+      Voltage: 9800,
+      Avg_Current: 2290,
+      TheoriticalRpm : 1000,
+    },
+      // name: "Page A",
+    {
+      name: "Page D",
+      RPM: 2780,
+      Voltage: 3908,
+      Avg_Current: 2000,
+      TheoriticalRpm : 1000,
+    },
+    {
+      name: "Page E",
+      RPM: 1890,
+      Voltage: 4800,
+      Avg_Current: 2181,
+      TheoriticalRpm : 1000,
+    },
+    {
+      name: "Page F",
+      RPM: 2390,
+      Voltage: 3800,
+      Avg_Current: 2500,
+      TheoriticalRpm : 1000,
+    },
+    {
+      name: "Page G",
+      RPM: 3490,
+      Voltage: 4300,
+      Avg_Current: 2100,
+      TheoriticalRpm : 1000,
+    }
+  ];
 
 export default class Session extends Component {
     constructor() {
@@ -134,6 +141,7 @@ export default class Session extends Component {
     }
 
     async componentDidMount() {
+        this.setState({graphData : ExampleData});
         var userEmail = await checkedLogged();
         this.setState({experimentId : this.props.location.state.experiment_id});
         if(userEmail == "") return;
@@ -258,7 +266,7 @@ export default class Session extends Component {
                             </Link>
                         </div>
                         )} */}
-                        <ReactPlayer url='https://www.youtube.com/watch?v=ZIhKmUGSpIo' />
+                        {/* <ReactPlayer url='https://www.youtube.com/watch?v=ZIhKmUGSpIo' /> */}
                     </div>
                     <br/>
                     <br/>
@@ -308,25 +316,35 @@ export default class Session extends Component {
                 </div>
                 <br/>
                 <br/>
+                <br/>
+                  <br/>
+                  <br/>
                 <div class = "graph">
-                    {/* RPM : parseFloat(response.RPM),
-                Voltage : parseFloat(this.state.vcc),
-                Avg_Current : parseFloat(response.Avg_Current),
-                TheoriticalRpm : (parseFloat(this.state.vcc)/12)*Rotations, */}
+                {/* <LineChart width={600} height={400} data={data}>
+                   <CartesianGrid strokeDasharray="3 3"/>
+                   <XAxis dataKey="Voltage" />
+                   <YAxis yAxisId="left-axis" />
+                   <YAxis yAxisId="right-axis" orientation="right" />
+                   <Tooltip />
+                   <Legend />
+                   <Line yAxisId="left-axis" type="monotone" dataKey="RPM"
+                   stroke="green"/>
+                   <Line yAxisId="right-axis" type="monotone" dataKey="Avg_Current"
+                   stroke="red" />
+                 </LineChart> */}
                     
-                    {/* RPM (theo and obs) vs voltage */}
+                {/* RPM (theo and obs) vs voltage */}
 
-                    <LineChart width={600} height={400} data={this.state.graphData}>
+                <LineChart width={600} height={400} data={this.state.graphData}>
                     <CartesianGrid strokeDasharray="3 3"/>
                     <XAxis dataKey="Voltage" />
                     <YAxis yAxisId="left-axis" />
-                    <YAxis yAxisId="left-axis2" />
                     <YAxis yAxisId="right-axis" orientation="right" />
                     <Tooltip />
-                    <Legend />
+                    <Legend wrapperStyle={{top: -20, left: 25}}/>
                     <Line yAxisId="left-axis" type="monotone" dataKey="RPM" 
                     stroke="green"/>
-                    <Line yAxisId="left-axis2" type="monotone" dataKey="TheoriticalRpm" 
+                    <Line yAxisId="left-axis" type="monotone" dataKey="TheoriticalRpm" 
                     stroke="blue"/>
                     <Line yAxisId="right-axis" type="monotone" dataKey="Avg_Current" 
                     stroke="red" />
@@ -334,39 +352,31 @@ export default class Session extends Component {
 
                     
                     <br/>
-                    {/* // rpm vs voltage */}
+                    
 
                     <LineChart width={600} height={400} data={this.state.graphData}>
                     <CartesianGrid strokeDasharray="3 3"/>
                     <XAxis dataKey="Voltage" />
                     <YAxis yAxisId="left-axis" />
-                    <YAxis yAxisId="left-axis2" />
                     <Tooltip />
-                    <Legend />
+                    <Legend wrapperStyle={{top: -20, left: 25}}/>
                     <Line yAxisId="left-axis" type="monotone" dataKey="RPM" 
                     stroke="green"/>
-                    <Line yAxisId="left-axis2" type="monotone" dataKey="TheoriticalRpm" 
+                    <Line yAxisId="left-axis" type="monotone" dataKey="TheoriticalRpm" 
                     stroke="blue"/>
                   </LineChart>
 
-
-
                   <br/>
-
-                  {/* // curr vs voltage */}
-
-
-
 
                   <LineChart width={600} height={400} data={this.state.graphData}>
                     <CartesianGrid strokeDasharray="3 3"/>
                     <XAxis dataKey="Voltage" />
                     <YAxis yAxisId="right-axis"/>
                     <Tooltip />
-                    <Legend />
+                    <Legend wrapperStyle={{top: -20, left: 25}}   />
                     <Line yAxisId="right-axis" type="monotone" dataKey="Avg_Current" 
                     stroke="red" />
-                  </LineChart>
+                  </LineChart> 
 
                 </div>
             </div>

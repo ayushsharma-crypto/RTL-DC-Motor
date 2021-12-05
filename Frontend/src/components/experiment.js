@@ -6,50 +6,57 @@ import Navbar from 'react-bootstrap/Navbar';
 import { Link } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
 import { GetExperimentDataById } from "../Sources/Auth";
-var data = [
-    {
-      RPM: 4000,
-      Voltage: 2400,
-      Avg_Current: 2400
-    },
-    {
-      name: "Page B",
-      RPM: 3000,
-      Voltage: 1398,
-      Avg_Current: 2210
-    },
-    {
-      name: "Page C",
-      RPM: 2000,
-      Voltage: 9800,
-      Avg_Current: 2290
-    },
-      // name: "Page A",
-    {
-      name: "Page D",
-      RPM: 2780,
-      Voltage: 3908,
-      Avg_Current: 2000
-    },
-    {
-      name: "Page E",
-      RPM: 1890,
-      Voltage: 4800,
-      Avg_Current: 2181
-    },
-    {
-      name: "Page F",
-      RPM: 2390,
-      Voltage: 3800,
-      Avg_Current: 2500
-    },
-    {
-      name: "Page G",
-      RPM: 3490,
-      Voltage: 4300,
-      Avg_Current: 2100
-    }
-  ];
+var data =  [
+  {
+    RPM: 4000,
+    Voltage: 2400,
+    Avg_Current: 2400,
+    TheoriticalRpm : 1000,
+  },
+  {
+    name: "Page B",
+    RPM: 3000,
+    Voltage: 1398,
+    Avg_Current: 2210,
+    TheoriticalRpm : 1000,
+  },
+  {
+    name: "Page C",
+    RPM: 2000,
+    Voltage: 9800,
+    Avg_Current: 2290,
+    TheoriticalRpm : 1000,
+  },
+    // name: "Page A",
+  {
+    name: "Page D",
+    RPM: 2780,
+    Voltage: 3908,
+    Avg_Current: 2000,
+    TheoriticalRpm : 1000,
+  },
+  {
+    name: "Page E",
+    RPM: 1890,
+    Voltage: 4800,
+    Avg_Current: 2181,
+    TheoriticalRpm : 1000,
+  },
+  {
+    name: "Page F",
+    RPM: 2390,
+    Voltage: 3800,
+    Avg_Current: 2500,
+    TheoriticalRpm : 1000,
+  },
+  {
+    name: "Page G",
+    RPM: 3490,
+    Voltage: 4300,
+    Avg_Current: 2100,
+    TheoriticalRpm : 1000,
+  }
+];
 
 export default class Experiment extends Component {
   constructor(props) {
@@ -57,7 +64,8 @@ export default class Experiment extends Component {
 
     this.state = {
       email: "",
-      data : ''
+      data : '',
+      graphData : [],
     };
   }
   
@@ -104,30 +112,20 @@ export default class Experiment extends Component {
                 <br/>
                 <br/>
                 <div class = "graph">
-                    {/* <LineChart
-                        width={500}
-                        height={300}
-                        data={data}
-                        margin={{
-                            top: 5,
-                            right: 30,
-                            left: 20,
-                            bottom: 5
-                        }}
-                        >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Line
-                            type="monotone"
-                            dataKey="RPM"
-                            stroke="#8884d8"
-                            activeDot={{ r: 8 }}
-                        />
-                        <Line type="monotone" dataKey="Voltage" stroke="#82ca9d" />
-                    </LineChart>      */}
+                {/* <LineChart width={600} height={400} data={data}>
+                   <CartesianGrid strokeDasharray="3 3"/>
+                   <XAxis dataKey="Voltage" />
+                   <YAxis yAxisId="left-axis" />
+                   <YAxis yAxisId="right-axis" orientation="right" />
+                   <Tooltip />
+                   <Legend />
+                   <Line yAxisId="left-axis" type="monotone" dataKey="RPM"
+                   stroke="green"/>
+                   <Line yAxisId="right-axis" type="monotone" dataKey="Avg_Current"
+                   stroke="red" />
+                 </LineChart> */}
+                    
+                {/* RPM (theo and obs) vs voltage */}
 
                 <LineChart width={600} height={400} data={data}>
                     <CartesianGrid strokeDasharray="3 3"/>
@@ -138,9 +136,45 @@ export default class Experiment extends Component {
                     <Legend />
                     <Line yAxisId="left-axis" type="monotone" dataKey="RPM" 
                     stroke="green"/>
+                    <Line yAxisId="left-axis" type="monotone" dataKey="TheoriticalRpm" 
+                    stroke="blue"/>
                     <Line yAxisId="right-axis" type="monotone" dataKey="Avg_Current" 
                     stroke="red" />
                   </LineChart>
+
+                    
+                    <br/>
+
+                    <LineChart width={600} height={400} data={data}>
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <XAxis dataKey="Voltage" />
+                    <YAxis yAxisId="left-axis" />
+                    <Tooltip />
+                    <Legend />
+                    <Line yAxisId="left-axis" type="monotone" dataKey="RPM" 
+                    stroke="green"/>
+                    <Line yAxisId="left-axis" type="monotone" dataKey="TheoriticalRpm" 
+                    stroke="blue"/>
+                  </LineChart>
+
+
+
+                  <br/>
+
+
+
+
+
+                  <LineChart width={600} height={400} data={data}>
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <XAxis dataKey="Voltage" />
+                    <YAxis yAxisId="right-axis"/>
+                    <Tooltip />
+                    <Legend wrapperStyle={{top: 0, left: 25}}/>
+                    <Line yAxisId="right-axis" type="monotone" dataKey="Avg_Current" 
+                    stroke="red" />
+                  </LineChart> 
+
                 </div>
                 
                 <table className="table table-striped">
