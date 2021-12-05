@@ -61,6 +61,7 @@ export default class Session extends Component {
             graphData : [],
             savedTime : "",
             summary : "",
+            isDisabled : false,
         };
         this.onChangevcc = this.onChangevcc.bind(this);
         this.onSubmitvcc = this.onSubmitvcc.bind(this);
@@ -127,7 +128,7 @@ export default class Session extends Component {
     onSubmitvcc(e){
         e.preventDefault();
         console.log("voltage is " + this.state.vcc);
-        this.
+        
         axios.get("http://192.168.1.7/voltage",{ params : {
             voltage : this.state.vcc,
             experiment_id : this.props.location.state.experiment_id
@@ -142,6 +143,12 @@ export default class Session extends Component {
                 alert("Send value again");
             }
         });
+        this.setState({
+            isDisabled: true
+        });
+    
+        // **** here's the timeout ****
+        setTimeout(() => this.setState({ isDisabled: false }), 5000);
     }
 
     async StopSession(){
@@ -249,9 +256,13 @@ export default class Session extends Component {
                     onChange={this.onChangevcc}
                     />
                 </div>
+                {
+                this.state.isDisabled && 
                 <div className="form-group">
-                    <input type="submit" value="submit" className="btn btn-primary" />
+                <input type="submit" value="submit" className="btn btn-primary" />
                 </div>
+                }
+                
                 </form>}
                 Add Experiment Summary: 
                 {this.ExperimentRunningOrNot() 
