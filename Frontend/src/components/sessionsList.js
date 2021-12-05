@@ -122,9 +122,14 @@ export default class SessionsList extends Component {
       };
       await DeleteSession(request);
    }
+
+   
+
    CheckRunning(a,b){
     var today = new Date();
-    if((today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate() == b) && (today.getHours() == a.substring(0,2)))
+    console.log(a,b);
+    console.log(today.getDate());
+    if((today.getFullYear() + '-' + (today.getMonth()+1) + '-'+ (String(today.getDate()).length==1?'0':'') + today.getDate() == b) && (today.getHours() == a.substring(0,2)))
     {
       return true;
     }
