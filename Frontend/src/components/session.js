@@ -243,7 +243,7 @@ export default class Session extends Component {
                     <button onClick={() => this.SaveSession()}>Save Experiment</button>
                 </div>
                 <div>
-                {this.ExperimentRunningOrNot() 
+                {!this.state.isDisabled &&  this.ExperimentRunningOrNot() 
                 && 
                 <form onSubmit={this.onSubmitvcc}>
                 <div className="form-group">
@@ -257,7 +257,7 @@ export default class Session extends Component {
                     />
                 </div>
                 {
-                this.state.isDisabled && 
+                
                 <div className="form-group">
                 <input type="submit" value="submit" className="btn btn-primary" />
                 </div>
