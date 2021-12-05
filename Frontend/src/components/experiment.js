@@ -75,7 +75,7 @@ export default class Experiment extends Component {
       experiment_id : exp_id
     };
     var ExperimentData = await GetExperimentDataById(req);
-    this.setState({data : ExperimentData});
+    this.setState({graphData : ExperimentData});
     
   }
 
@@ -127,13 +127,13 @@ export default class Experiment extends Component {
                     
                 {/* RPM (theo and obs) vs voltage */}
 
-                <LineChart width={600} height={400} data={data}>
+                <LineChart width={600} height={400} data={this.state.graphData}>
                     <CartesianGrid strokeDasharray="3 3"/>
                     <XAxis dataKey="Voltage" />
                     <YAxis yAxisId="left-axis" />
                     <YAxis yAxisId="right-axis" orientation="right" />
                     <Tooltip />
-                    <Legend />
+                    <Legend wrapperStyle={{top: -20, left: 25}}/>
                     <Line yAxisId="left-axis" type="monotone" dataKey="RPM" 
                     stroke="green"/>
                     <Line yAxisId="left-axis" type="monotone" dataKey="TheoriticalRpm" 
@@ -145,12 +145,12 @@ export default class Experiment extends Component {
                     
                     <br/>
 
-                    <LineChart width={600} height={400} data={data}>
+                    <LineChart width={600} height={400} data={this.state.graphData}>
                     <CartesianGrid strokeDasharray="3 3"/>
                     <XAxis dataKey="Voltage" />
                     <YAxis yAxisId="left-axis" />
                     <Tooltip />
-                    <Legend />
+                    <Legend wrapperStyle={{top: -20, left: 25}}/>
                     <Line yAxisId="left-axis" type="monotone" dataKey="RPM" 
                     stroke="green"/>
                     <Line yAxisId="left-axis" type="monotone" dataKey="TheoriticalRpm" 
@@ -165,12 +165,12 @@ export default class Experiment extends Component {
 
 
 
-                  <LineChart width={600} height={400} data={data}>
+                  <LineChart width={600} height={400} data={this.state.graphData}>
                     <CartesianGrid strokeDasharray="3 3"/>
                     <XAxis dataKey="Voltage" />
                     <YAxis yAxisId="right-axis"/>
                     <Tooltip />
-                    <Legend wrapperStyle={{top: 0, left: 25}}/>
+                    <Legend wrapperStyle={{top: -20, left: 25}}/>
                     <Line yAxisId="right-axis" type="monotone" dataKey="Avg_Current" 
                     stroke="red" />
                   </LineChart> 
@@ -189,7 +189,7 @@ export default class Experiment extends Component {
                     </tr>
                     </thead>
                     <tbody>
-
+                        
                     </tbody>
                 </table>
             </div>
