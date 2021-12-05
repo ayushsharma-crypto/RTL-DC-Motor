@@ -200,31 +200,25 @@ export async function CreateNewExperiment(exp){
             console.log(res.data);
             if(res.data.success === true)
             {
-              // try{
+              try{
                 axios.post("http://127.0.0.1:8080/~/in-cse/in-name/AE-RTL-MOTOR", {
                     "m2m:cnt":{
                         "rn": res.data.res,
                         "mni": 120
                     }
                 });
-                
-                // this.props.history.push({
-                //     pathname: "http://localhost:4000/session",
-                //     state: { experiment_id :  res.data.res}
-                //   });
                 resolve(res.data.res);
-              // }
-              // catch {
+              }
+              catch {
                 
-              //   // THIS CODE MUST BE UNCOMMENTED IN FUTURE 
+                // THIS CODE MUST BE UNCOMMENTED IN FUTURE 
 
-              //   DeleteExperimentById({
-              //     experiment_id : res.data.res,
-              //     session_id : exp.session_Id,
-              //   });
-              //   alert("ERROR: PLease create New experiment, Couldn't connect to sensors");
-              // }
-                
+                DeleteExperimentById({
+                  experiment_id : res.data.res,
+                  session_id : exp.session_Id,
+                });
+                alert("ERROR: PLease create New experiment, Couldn't connect to sensors");
+              }
             }
             else
             {
