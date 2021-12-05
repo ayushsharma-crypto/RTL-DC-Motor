@@ -62,6 +62,7 @@ export default class Session extends Component {
             savedTime : "",
             summary : "",
             isDisabled : false,
+            experimentId : "",
         };
         this.onChangevcc = this.onChangevcc.bind(this);
         this.onSubmitvcc = this.onSubmitvcc.bind(this);
@@ -69,18 +70,15 @@ export default class Session extends Component {
 
     }
 
-    async componentDidMount() {
-        var userEmail = await checkedLogged();
-        if(userEmail == "") return;
-        this.setState({
-            userEmail : userEmail,
-        });
+    GetLatestData(){
         try {
             // var destination = 'http://127.0.0.1:8080/~/in-cse/in-name/AE-RTL-MOTOR/' + this.props.location.state.experiment_id + '/la';
             
             var receivedData = {};
-            
-            await axios.get("http://localhost:4000/getDataFromOneM2M").then(res => {
+            var data = {
+                expid : this.state.experimentId,
+            }
+            await axios.get("http://localhost:4000/getDataFromOneM2M",{params : data}).then(res => {
                 receivedData = res.data;
             })
 
@@ -89,16 +87,24 @@ export default class Session extends Component {
             const val_array = response.split(' ');
 
             var formattedData = {
-                RPM : parseFloat(val_array[0]),
-                Voltage : parseFloat(val_array[1]),
-                Avg_Current : parseFloat(val_array[2])
+                RPM : response.RPM,
+                Voltage : response.voltage,
+                Avg_Current : response.Avg_Current,
             };
+
+            // var formattedData = {
+            //     RPM : parseFloat(val_array[0]),
+            //     Voltage : parseFloat(val_array[1]),
+            //     Avg_Current : parseFloat(val_array[2])
+            // };
+
             // var formattedData = {
             //     RPM : "1",
             //     Voltage : "1",
             //     Avg_Current : "1",
             // }
             // var receivedData = await response.json();
+
             if(this.state.graphData.length == 6)
             {
                 var temp = this.state.graphData;
@@ -120,6 +126,68 @@ export default class Session extends Component {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    async componentDidMount() {
+        var userEmail = await checkedLogged();
+        this.setState({experimentId : this.props.location.state.experiment_id});
+        if(userEmail == "") return;
+        this.setState({
+            userEmail : userEmail,
+        });
+        // try {
+        //     // var destination = 'http://127.0.0.1:8080/~/in-cse/in-name/AE-RTL-MOTOR/' + this.props.location.state.experiment_id + '/la';
+            
+        //     var receivedData = {};
+            
+        //     await axios.get("http://localhost:4000/getDataFromOneM2M").then(res => {
+        //         receivedData = res.data;
+        //     })
+
+        //     var response = receivedData;
+        //     console.log("response=",response);
+        //     const val_array = response.split(' ');
+
+        //     var formattedData = {
+        //         RPM : parseFloat(val_array[0]),
+        //         Voltage : parseFloat(val_array[1]),
+        //         Avg_Current : parseFloat(val_array[2])
+        //     };
+
+        //     // var formattedData = {
+        //     //     RPM : parseFloat(val_array[0]),
+        //     //     Voltage : parseFloat(val_array[1]),
+        //     //     Avg_Current : parseFloat(val_array[2])
+        //     // };
+
+        //     // var formattedData = {
+        //     //     RPM : "1",
+        //     //     Voltage : "1",
+        //     //     Avg_Current : "1",
+        //     // }
+        //     // var receivedData = await response.json();
+
+        //     if(this.state.graphData.length == 6)
+        //     {
+        //         var temp = this.state.graphData;
+        //         temp.shift();
+        //         temp.push(formattedData);
+        //         this.setState({
+        //             graphData : temp
+        //         });
+        //     }
+        //     else
+        //     {
+        //         var temp = this.state.graphData;
+        //         temp.shift();
+        //         temp.push(formattedData);
+        //         this.setState({
+        //             graphData : temp
+        //         });
+        //     }
+        // } catch (error) {
+        //     console.log(error);
+        // }
     }
     onChangevcc(e){
         console.log("get" ,e.target.value);
@@ -151,9 +219,12 @@ export default class Session extends Component {
         this.setState({
             isDisabled: true
         });
-    
+        
         // **** here's the timeout ****
-        setTimeout(() => this.setState({ isDisabled: false }), 5000);
+        setTimeout(function(){
+            this.setState({ isDisabled: false });
+            this.GetLatestData();
+        } , 5000);
     }
 
     async StopSession(){
