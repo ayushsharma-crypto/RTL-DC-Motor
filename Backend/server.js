@@ -6,7 +6,8 @@ const PORT = 4000;
 const DB_NAME = "dcmotorDB";
 const dotenv = require('dotenv');
 const cors = require("cors");
-var session = require("express-session")
+var session = require("express-session");
+const request = require('request');
 
 // Cross-Origin approval and app-use
 // var corsOptions = {
@@ -58,7 +59,7 @@ app.use(function (req, res, next) {
     // var origin = origins.indexOf(req.headers.origin) > -1 ? req.headers.Origin : cors.default;
     // console.log(origin);
     // res.setHeader('Access-Control-Allow-Origin', "http://localhost:3000");
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Methods', '*');
     res.setHeader('Access-Control-Allow-Headers', "Content-Type");
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
@@ -90,6 +91,53 @@ var BookingRouter = require("./routes/Booking");
 app.use("/experiment", experimentAPIRouter);
 app.use("/user", UserRouter);
 app.use("/booking",BookingRouter);
+
+  
+app.get('/getDataFromOneM2M', (req, res) => { 
+request(
+    { url: 'https://esw-onem2m.iiit.ac.in/~/in-cse/in-name/Team-22/Node-1/Data?rcn=4',
+        headers: {
+            'X-M2M-Origin': 'ob3PvRNzkq:RaX61@EpnN',
+            'Accept': 'application/json'
+        }
+},
+    (error, response, body) => {
+    if (error || response.statusCode !== 200) {
+        return res.status(500).json({ type: 'error', message: err.message });
+    }
+    res.json(JSON.parse(body));
+    }
+)
+});
+
+app.post('/makeNewNode', (req, res) => {
+    console.log("req", req.body);
+    var data = {
+        "m2m:cnt":{
+            "rn": req.body.experimentId,
+            "mni": 120
+        }
+    };
+    request(
+        { 
+            method : 'POST',
+            url: 'https://esw-onem2m.iiit.ac.in/~/in-cse/in-name/Team-22',
+            headers: {
+                'X-M2M-Origin': 'ob3PvRNzkq:RaX61@EpnN',
+                'Content-Type': 'application/json;ty=3'
+            },
+            body: data,
+            json: true,
+    },
+        (error, response, body) => {
+            console.log("response=", response.statusCode);
+        if (error) {
+            return res.status(500).json({ type: 'error', message: error.message });
+        }
+        res.json(JSON.parse(body));
+        }
+    )
+    });
 
 // server check
 app.listen(PORT, function() {

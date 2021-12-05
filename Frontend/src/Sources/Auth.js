@@ -201,11 +201,11 @@ export async function CreateNewExperiment(exp){
             if(res.data.success === true)
             {
               try{
-                axios.post("http://127.0.0.1:8080/~/in-cse/in-name/AE-RTL-MOTOR", {
-                    "m2m:cnt":{
-                        "rn": res.data.res,
-                        "mni": 120
-                    }
+                var data = {
+                  experimentId: res.data.res
+                }
+                axios.post("http://localhost:4000/makeNewNode", data).then(res => {
+                  console.log("Created New Node \n");
                 });
                 resolve(res.data.res);
               }

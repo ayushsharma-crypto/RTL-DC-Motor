@@ -77,22 +77,27 @@ export default class Session extends Component {
         });
         try {
             // var destination = 'http://127.0.0.1:8080/~/in-cse/in-name/AE-RTL-MOTOR/' + this.props.location.state.experiment_id + '/la';
+            
+            var receivedData = {};
+            
+            await axios.get("http://localhost:4000/getDataFromOneM2M").then(res => {
+                receivedData = res.data;
+            })
 
-            // var receivedData = await fetch(destination);
-            // var response = await receivedData.json();
-            // console.log(response);
-            // const val_array = response.split(' ');
+            var response = receivedData;
+            console.log("response=",response);
+            const val_array = response.split(' ');
 
-            // var formattedData = {
-            //     RPM : parseFloat(val_array[0]),
-            //     Voltage : parseFloat(val_array[1]),
-            //     Avg_Current : parseFloat(val_array[2])
-            // };
             var formattedData = {
-                RPM : "1",
-                Voltage : "1",
-                Avg_Current : "1",
-            }
+                RPM : parseFloat(val_array[0]),
+                Voltage : parseFloat(val_array[1]),
+                Avg_Current : parseFloat(val_array[2])
+            };
+            // var formattedData = {
+            //     RPM : "1",
+            //     Voltage : "1",
+            //     Avg_Current : "1",
+            // }
             // var receivedData = await response.json();
             if(this.state.graphData.length == 6)
             {
