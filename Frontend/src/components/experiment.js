@@ -75,7 +75,7 @@ export default class Experiment extends Component {
       experiment_id : exp_id
     };
     var ExperimentData = await GetExperimentDataById(req);
-    this.setState({graphData : ExperimentData});
+    this.setState({graphData : data});
     
   }
 
@@ -180,16 +180,29 @@ export default class Experiment extends Component {
                 <table className="table table-striped">
                     <thead>
                     <tr>
-                        <th>Voltage</th>
+                        <th>S no.</th>
+                        <th>Voltage(V)</th>
                         <th>Theoretical RPM</th>
                         <th>Observed RPM</th>
-                        <th>Temperature</th>
-                        <th>Humidity</th>
+                        <th>Average Current(A)</th>
+                        
                         
                     </tr>
                     </thead>
                     <tbody>
-                        
+                    {
+                    this.state.graphData.map((j, i) => {
+                      return (
+                        <tr>
+                          <td>{i+1}</td>
+                          <td>{j.Voltage}</td>
+                          <td>{j.TheoriticalRpm}</td>
+                          <td>{j.RPM}</td>
+                          <td>{j.Avg_Current}</td>
+                        </tr>
+                      );
+                    })
+                  }
                     </tbody>
                 </table>
             </div>
