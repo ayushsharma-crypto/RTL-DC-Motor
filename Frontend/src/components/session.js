@@ -128,8 +128,8 @@ export default class Session extends Component {
     onSubmitvcc(e){
         e.preventDefault();
         console.log("voltage is " + this.state.vcc);
-        
-        axios.get("http://192.168.1.7/voltage",{ params : {
+        console.log(process.env.ESP32_IP);
+        axios.get("http://192.168.1.4/voltage",{ params : {
             voltage : this.state.vcc,
             experiment_id : this.props.location.state.experiment_id
         }}).then(res => {
