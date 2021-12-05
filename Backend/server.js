@@ -134,7 +134,16 @@ app.post('/makeNewNode', (req, res) => {
         if (error) {
             return res.status(500).json({ type: 'error', message: error.message });
         }
-        res.json(JSON.parse(body));
+
+        /* 
+        * THIS CODE SHOULD BE UNCOMMENTED
+        */
+        // var reps = {
+        //     RPM : body.something,
+        //     Voltage : body.something,
+        //     Avg_Current : body.something,
+        // }
+        res.json(reps);
         }
     )
     });

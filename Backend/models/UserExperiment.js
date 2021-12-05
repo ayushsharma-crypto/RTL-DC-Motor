@@ -8,6 +8,7 @@ const UserSchema = new Schema(
           Voltage: String,
           RPM : String,
           Avg_Current : String,
+          TheoriticalRpm : String,
           }
          ],
          time : String,

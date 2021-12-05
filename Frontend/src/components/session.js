@@ -70,7 +70,7 @@ export default class Session extends Component {
 
     }
 
-    GetLatestData(){
+    async GetLatestData(){
         try {
             // var destination = 'http://127.0.0.1:8080/~/in-cse/in-name/AE-RTL-MOTOR/' + this.props.location.state.experiment_id + '/la';
             
@@ -85,11 +85,16 @@ export default class Session extends Component {
             var response = receivedData;
             console.log("response=",response);
             const val_array = response.split(' ');
+            /**
+             * Rotations of the motor
+             */
+            var Rotations = 150;
 
             var formattedData = {
-                RPM : response.RPM,
-                Voltage : response.voltage,
-                Avg_Current : response.Avg_Current,
+                RPM : parseFloat(response.RPM),
+                Voltage : parseFloat(this.state.vcc),
+                Avg_Current : parseFloat(response.Avg_Current),
+                TheoriticalRpm : (parseFloat(this.state.vcc)/12)*Rotations,
             };
 
             // var formattedData = {
@@ -135,59 +140,7 @@ export default class Session extends Component {
         this.setState({
             userEmail : userEmail,
         });
-        // try {
-        //     // var destination = 'http://127.0.0.1:8080/~/in-cse/in-name/AE-RTL-MOTOR/' + this.props.location.state.experiment_id + '/la';
-            
-        //     var receivedData = {};
-            
-        //     await axios.get("http://localhost:4000/getDataFromOneM2M").then(res => {
-        //         receivedData = res.data;
-        //     })
-
-        //     var response = receivedData;
-        //     console.log("response=",response);
-        //     const val_array = response.split(' ');
-
-        //     var formattedData = {
-        //         RPM : parseFloat(val_array[0]),
-        //         Voltage : parseFloat(val_array[1]),
-        //         Avg_Current : parseFloat(val_array[2])
-        //     };
-
-        //     // var formattedData = {
-        //     //     RPM : parseFloat(val_array[0]),
-        //     //     Voltage : parseFloat(val_array[1]),
-        //     //     Avg_Current : parseFloat(val_array[2])
-        //     // };
-
-        //     // var formattedData = {
-        //     //     RPM : "1",
-        //     //     Voltage : "1",
-        //     //     Avg_Current : "1",
-        //     // }
-        //     // var receivedData = await response.json();
-
-        //     if(this.state.graphData.length == 6)
-        //     {
-        //         var temp = this.state.graphData;
-        //         temp.shift();
-        //         temp.push(formattedData);
-        //         this.setState({
-        //             graphData : temp
-        //         });
-        //     }
-        //     else
-        //     {
-        //         var temp = this.state.graphData;
-        //         temp.shift();
-        //         temp.push(formattedData);
-        //         this.setState({
-        //             graphData : temp
-        //         });
-        //     }
-        // } catch (error) {
-        //     console.log(error);
-        // }
+        
     }
     onChangevcc(e){
         console.log("get" ,e.target.value);
@@ -356,30 +309,65 @@ export default class Session extends Component {
                 <br/>
                 <br/>
                 <div class = "graph">
-                    <LineChart
-                        width={500}
-                        height={300}
-                        data={this.state.graphData}
-                        margin={{
-                            top: 5,
-                            right: 30,
-                            left: 20,
-                            bottom: 5
-                        }}
-                        >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Line
-                            type="monotone"
-                            dataKey="pv"
-                            stroke="#8884d8"
-                            activeDot={{ r: 8 }}
-                        />
-                        <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-                    </LineChart>     
+                    {/* RPM : parseFloat(response.RPM),
+                Voltage : parseFloat(this.state.vcc),
+                Avg_Current : parseFloat(response.Avg_Current),
+                TheoriticalRpm : (parseFloat(this.state.vcc)/12)*Rotations, */}
+                    
+                    {/* RPM (theo and obs) vs voltage */}
+
+                    <LineChart width={600} height={400} data={this.state.graphData}>
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <XAxis dataKey="Voltage" />
+                    <YAxis yAxisId="left-axis" />
+                    <YAxis yAxisId="left-axis2" />
+                    <YAxis yAxisId="right-axis" orientation="right" />
+                    <Tooltip />
+                    <Legend />
+                    <Line yAxisId="left-axis" type="monotone" dataKey="RPM" 
+                    stroke="green"/>
+                    <Line yAxisId="left-axis2" type="monotone" dataKey="TheoriticalRpm" 
+                    stroke="blue"/>
+                    <Line yAxisId="right-axis" type="monotone" dataKey="Avg_Current" 
+                    stroke="red" />
+                  </LineChart>
+
+                    
+                    <br/>
+                    {/* // rpm vs voltage */}
+
+                    <LineChart width={600} height={400} data={this.state.graphData}>
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <XAxis dataKey="Voltage" />
+                    <YAxis yAxisId="left-axis" />
+                    <YAxis yAxisId="left-axis2" />
+                    <Tooltip />
+                    <Legend />
+                    <Line yAxisId="left-axis" type="monotone" dataKey="RPM" 
+                    stroke="green"/>
+                    <Line yAxisId="left-axis2" type="monotone" dataKey="TheoriticalRpm" 
+                    stroke="blue"/>
+                  </LineChart>
+
+
+
+                  <br/>
+
+                  {/* // curr vs voltage */}
+
+
+
+
+                  <LineChart width={600} height={400} data={this.state.graphData}>
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <XAxis dataKey="Voltage" />
+                    <YAxis yAxisId="right-axis"/>
+                    <Tooltip />
+                    <Legend />
+                    <Line yAxisId="right-axis" type="monotone" dataKey="Avg_Current" 
+                    stroke="red" />
+                  </LineChart>
+
                 </div>
             </div>
         )
