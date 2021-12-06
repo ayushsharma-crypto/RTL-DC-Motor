@@ -162,8 +162,8 @@ export async function GetExperimentDataById(req){
     .then(response => {
         if(response.data.success === true)
         {
-            console.log(response.data.data);
-            resolve(response.data.data);
+            console.log(response.data.data.experimentData);
+            resolve(response.data.data.experimentData);
         }
     });
     }

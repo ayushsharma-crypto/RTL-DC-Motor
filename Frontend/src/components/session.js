@@ -115,7 +115,7 @@ export default class Session extends Component {
 
             tempGraphDataPerVolt.push({
                 // Input_Voltage : this.state.vcc,
-                Voltage : this.state.vcc,
+                Voltage : parseFloat(this.state.vcc),
                 RPM : (formattedData[0].RPM + formattedData[1].RPM + formattedData[2].RPM + formattedData[3].RPM + formattedData[4].RPM)/5,
                 // Voltage : (formattedData[0].Voltage + formattedData[1].Voltage + formattedData[2].Voltage + formattedData[3].Voltage + formattedData[4].Voltage)/5,
                 Avg_Current : (formattedData[0].Avg_Current + formattedData[1].Avg_Current + formattedData[2].Avg_Current + formattedData[3].Avg_Current + formattedData[4].Avg_Current)/5,
@@ -137,7 +137,7 @@ export default class Session extends Component {
 
     async componentDidMount() {
         this.setState({graphData : ExampleData});
-        this.setState({graphDataPerVolt : ExampleData});
+        this.setState({graphDataPerVolt : []});
         var userEmail = await checkedLogged();
         this.setState({experimentId : this.props.location.state.experiment_id});
         if(userEmail == "") return;
@@ -371,7 +371,7 @@ export default class Session extends Component {
 
                   <br/>
 
-                  <LineChart width={600} height={400} data={this.state.graphDataPerVolt}>
+                  {/* <LineChart width={600} height={400} data={this.state.graphDataPerVolt}>
                     <CartesianGrid strokeDasharray="3 3"/>
                     <XAxis dataKey="Voltage" />
                     <YAxis yAxisId="left-axis" />
@@ -385,7 +385,7 @@ export default class Session extends Component {
                     <Line yAxisId="right-axis" type="monotone" dataKey="Avg_Current" 
                     stroke="red" />
                     
-                  </LineChart>
+                  </LineChart> */}
 
                 </div>
             </div>

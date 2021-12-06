@@ -70,13 +70,14 @@ export default class Experiment extends Component {
   }
   
   async componentDidMount(){
-    var exp_id  = this.props.location.state.id;
+    var exp_id  = this.props.location.state.experiment_id;
+    console.log("exp_id",exp_id);
     var req = {
       experiment_id : exp_id
     };
     var ExperimentData = await GetExperimentDataById(req);
-    this.setState({graphData : data});
-    
+    this.setState({graphData : ExperimentData});
+      console.log("expdata",ExperimentData);
   }
 
 
