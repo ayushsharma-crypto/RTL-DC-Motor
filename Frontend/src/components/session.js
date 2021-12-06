@@ -278,18 +278,12 @@ export default class Session extends Component {
                             </Link>
                         </div>
                         )} */}
-                        {/* <ReactPlayer url='https://www.youtube.com/watch?v=ZIhKmUGSpIo' /> */}
+                        <ReactPlayer url='https://www.youtube.com/watch?v=ZIhKmUGSpIo' />
                     </div>
                     <br/>
                     <br/>
-                    {/* <input type="submit" value="Start Session" className="btn btn-success" />
-                    &nbsp;
-                    <input type="submit" value="Stop Session" className="btn btn-danger" />
-                    &nbsp; */}
-                    
-                    {/* <input type="submit" value="Save Session" className="btn btn-primary" /> */}
-                    <button onClick={() => this.StopSession()}>Stop Experiment</button>
-                    <button onClick={() => this.SaveSession()}>Save Experiment</button>
+                    <button class = "btn-danger" onClick={() => this.StopSession()}>Stop Experiment</button>
+                    <button class = "btn-success" onClick={() => this.SaveSession()}>Save Experiment</button>
                 </div>
                 <div>
                 {!this.state.isDisabled &&  this.ExperimentRunningOrNot() 

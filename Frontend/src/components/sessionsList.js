@@ -160,18 +160,8 @@ export default class SessionsList extends Component {
               />
               
               
-              <button onClick={this.showAll}>
-              Show All
-              </button>
+              <button class = "btn-primary" onClick={this.showAll}>Show All</button>
            </div>
-           
-           {/* <div className="form-group">
-                    <label>Date : </label>
-                    <DatePicker
-                    // onSelect={this.onChangeSessionDate}
-                    selected={this.state.sessionDate}
-            />
-            </div> */}
            <table className="table table-striped">
                <thead>
                <tr>
@@ -192,27 +182,10 @@ export default class SessionsList extends Component {
                  <td>{j.sessionDate}</td>
                  <td>{j.sessionStartTime}</td>
                  <td>
-                 <button onClick={() => this.viewExperiments(j.sessionId,this.CheckRunning(j.sessionStartTime,j.sessionDate))}>Enter</button>
-                 {/* <form onSubmit={this.viewExperiments}>
-                    <div className="form-group">
-                        <input type="submit" name="id" value={j.sessionId} placeholder="Enter" className="btn btn-primary" />
-                    </div>
-                </form> */}
-
-
-
-                     {/* <button onClick={this.viewExperiments(j.sessionId)}>{j.sessionId}</button> */}
-                 {/* <Button className="btn btn-primary" value={j.sessionId} /> */}
+                    <button class = "btn-success" onClick={() => this.viewExperiments(j.sessionId,this.CheckRunning(j.sessionStartTime,j.sessionDate))}>Enter</button>
                  </td>
-
                  <td>
-                 <button onClick={() => this.deleteSession(j.sessionId)}>Delete</button>
-                 {/* <form onSubmit={this.deleteSession}>
-                    <div className="form-group">
-                        <input type="submit" name="id" value={j.sessionId} placeholder="Delete" className="btn btn-danger" />
-                    </div>
-                </form> */}
-
+                 <button class = "btn-danger" onClick={() => this.deleteSession(j.sessionId)}>Delete</button>
                  </td>
                </tr>
              );

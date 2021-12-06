@@ -159,7 +159,7 @@ export default class ExperimentsList extends Component {
                         <td>{j.ExperimentId}</td>
                         {/* <td>{j.sessionStartTime}</td> */}
                         <td>
-                        <button onClick={() => this.onClickLink(j.ExperimentId)}>Enter</button>
+                        <button class = "btn-primary" onClick={() => this.onClickLink(j.ExperimentId)}>Enter</button>
                         {/* <form onSubmit={this.onClickLink}>
                             <div className="form-group">
                                 <input type="submit" name="id" value={j.ExperimentId} className="btn btn-primary" />
@@ -171,7 +171,7 @@ export default class ExperimentsList extends Component {
                         {/* <Button className="btn btn-primary" value={j.sessionId} /> */}
                         </td>
                         <td>
-                        <button onClick={() => this.deleteExperiment(j.ExperimentId)}>Delete</button>
+                        <button class = "btn-danger" onClick={() => this.deleteExperiment(j.ExperimentId)}>Delete</button>
                         {/* <form onSubmit={this.deleteExperiment}>
                             <div className="form-group">
                                 <input type="submit" name="id" value={j.ExperimentId} className="btn btn-danger" />
