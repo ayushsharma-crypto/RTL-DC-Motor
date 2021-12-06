@@ -92,7 +92,7 @@ export default class Session extends Component {
 
             var response = receivedData;
             console.log("response=",response);
-            const val_array = response.split(' ');
+            // const val_array = response.split(' ');
             /**
              * Rotations of the motor
              */
@@ -109,6 +109,8 @@ export default class Session extends Component {
                 formattedData.push(tempFormattedData);
             });
 
+            console.log("Formatted Data = ", formattedData);
+
             var tempGraphDataPerVolt = this.state.graphDataPerVolt;
 
             tempGraphDataPerVolt.push({
@@ -118,36 +120,15 @@ export default class Session extends Component {
                 // Voltage : (formattedData[0].Voltage + formattedData[1].Voltage + formattedData[2].Voltage + formattedData[3].Voltage + formattedData[4].Voltage)/5,
                 Avg_Current : (formattedData[0].Avg_Current + formattedData[1].Avg_Current + formattedData[2].Avg_Current + formattedData[3].Avg_Current + formattedData[4].Avg_Current)/5,
                 TheoriticalRpm : (parseFloat(this.state.vcc)/12)*Rotations,
-            })
+            });
 
-
-
-            // var formattedData = {
-                
-            // };
-
-            // if(this.state.graphData.length == 6)
-            // {
-            //     var temp = this.state.graphData;
-            //     temp.shift();
-            //     temp.push(formattedData);
-            //     this.setState({
-            //         graphData : temp
-            //     });
-            // }
-            // else
-            // {
-            //     var temp = this.state.graphData;
-            //     temp.shift();
-            //     temp.push(formattedData);
-            //     this.setState({
-            //         graphData : temp
-            //     });
-            // }
+            console.log("Temp Graph Data Per Volt= ", tempGraphDataPerVolt);
             this.setState({
                         graphData : formattedData,
                         graphDataPerVolt : tempGraphDataPerVolt
                     });
+
+            console.log("hahaha");
         } catch (error) {
             console.log(error);
         }
