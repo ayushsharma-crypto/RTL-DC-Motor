@@ -70,6 +70,7 @@ export default class Session extends Component {
             summary : "",
             isDisabled : false,
             experimentId : "",
+            graphDataPerVolt : [],
         };
         this.onChangevcc = this.onChangevcc.bind(this);
         this.onSubmitvcc = this.onSubmitvcc.bind(this);
@@ -108,6 +109,17 @@ export default class Session extends Component {
                 formattedData.push(tempFormattedData);
             });
 
+            var tempGraphDataPerVolt = this.state.graphDataPerVolt;
+
+            tempGraphDataPerVolt.push({
+                Input_Voltage : this.state.vcc,
+                RPM : (formattedData[0].RPM + formattedData[1].RPM + formattedData[2].RPM + formattedData[3].RPM + formattedData[4].RPM)/5,
+                Voltage : (formattedData[0].Voltage + formattedData[1].Voltage + formattedData[2].Voltage + formattedData[3].Voltage + formattedData[4].Voltage)/5,
+                Avg_Current : (formattedData[0].Avg_Current + formattedData[1].Avg_Current + formattedData[2].Avg_Current + formattedData[3].Avg_Current + formattedData[4].Avg_Current)/5,
+                TheoriticalRpm : (parseFloat(this.state.vcc)/12)*Rotations,
+            })
+
+
 
             // var formattedData = {
                 
@@ -132,7 +144,8 @@ export default class Session extends Component {
             //     });
             // }
             this.setState({
-                        graphData : formattedData
+                        graphData : formattedData,
+                        graphDataPerVolt : tempGraphDataPerVolt
                     });
         } catch (error) {
             console.log(error);
@@ -376,6 +389,24 @@ export default class Session extends Component {
                     <Line yAxisId="right-axis" type="monotone" dataKey="Avg_Current" 
                     stroke="red" />
                   </LineChart> 
+
+
+                  <br/>
+                  <LineChart width={600} height={400} data={this.state.graphDataPerVolt}>
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <XAxis dataKey="Input_Voltage" />
+                    <YAxis yAxisId="left-axis" />
+                    <YAxis yAxisId="right-axis" orientation="right" />
+                    <Tooltip />
+                    <Legend wrapperStyle={{top: -20, left: 25}}/>
+                    <Line yAxisId="left-axis" type="monotone" dataKey="RPM" 
+                    stroke="green"/>
+                    <Line yAxisId="left-axis" type="monotone" dataKey="TheoriticalRpm" 
+                    stroke="blue"/>
+                    <Line yAxisId="right-axis" type="monotone" dataKey="Avg_Current" 
+                    stroke="red" />
+                    
+                  </LineChart>
 
                 </div>
             </div>
