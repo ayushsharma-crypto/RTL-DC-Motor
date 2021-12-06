@@ -124,7 +124,6 @@ export default class Experiment extends Component {
                    <Line yAxisId="right-axis" type="monotone" dataKey="Avg_Current"
                    stroke="red" />
                  </LineChart> */}
-                    
                 {/* RPM (theo and obs) vs voltage */}
 
                 <LineChart width={600} height={400} data={this.state.graphData}>

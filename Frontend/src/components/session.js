@@ -112,9 +112,10 @@ export default class Session extends Component {
             var tempGraphDataPerVolt = this.state.graphDataPerVolt;
 
             tempGraphDataPerVolt.push({
-                Input_Voltage : this.state.vcc,
+                // Input_Voltage : this.state.vcc,
+                Voltage : this.state.vcc,
                 RPM : (formattedData[0].RPM + formattedData[1].RPM + formattedData[2].RPM + formattedData[3].RPM + formattedData[4].RPM)/5,
-                Voltage : (formattedData[0].Voltage + formattedData[1].Voltage + formattedData[2].Voltage + formattedData[3].Voltage + formattedData[4].Voltage)/5,
+                // Voltage : (formattedData[0].Voltage + formattedData[1].Voltage + formattedData[2].Voltage + formattedData[3].Voltage + formattedData[4].Voltage)/5,
                 Avg_Current : (formattedData[0].Avg_Current + formattedData[1].Avg_Current + formattedData[2].Avg_Current + formattedData[3].Avg_Current + formattedData[4].Avg_Current)/5,
                 TheoriticalRpm : (parseFloat(this.state.vcc)/12)*Rotations,
             })
@@ -228,7 +229,7 @@ export default class Session extends Component {
         var request = {
             expId : this.props.location.state.experiment_id,
             LastSavedtime : today.getHours()+':'+(today.getMonth()+1)+':'+today.getSeconds(),
-            graphData : this.state.graphData,
+            graphData : this.state.graphDataPerVolt,
             description : this.state.summary
         }
         await SaveExperimentData(request);
@@ -388,7 +389,7 @@ export default class Session extends Component {
                   <br/>
                   <LineChart width={600} height={400} data={this.state.graphDataPerVolt}>
                     <CartesianGrid strokeDasharray="3 3"/>
-                    <XAxis dataKey="Input_Voltage" />
+                    <XAxis dataKey="Voltage" />
                     <YAxis yAxisId="left-axis" />
                     <YAxis yAxisId="right-axis" orientation="right" />
                     <Tooltip />
