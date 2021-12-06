@@ -163,7 +163,7 @@ export default class Session extends Component {
         e.preventDefault();
         console.log("voltage is " + this.state.vcc);
         console.log(process.env.ESP32_IP);
-        axios.get("http://192.168.1.4/voltage",{ params : {
+        axios.get("http://192.168.1.6/voltage",{ params : {
             voltage : this.state.vcc,
             experiment_id : this.props.location.state.experiment_id
         }}).then(res => {
@@ -182,10 +182,10 @@ export default class Session extends Component {
         });
         
         // **** here's the timeout ****
-        setTimeout(function(){
+        setTimeout(()=>{
             this.setState({ isDisabled: false });
             this.GetLatestData();
-        } , 5000);
+        } , 25000);
     }
 
     async StopSession(){

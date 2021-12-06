@@ -95,17 +95,35 @@ app.use("/booking",BookingRouter);
   
 app.get('/getDataFromOneM2M', (req, res) => { 
 request(
-    { url: 'https://esw-onem2m.iiit.ac.in/~/in-cse/in-name/Team-22/Node-1/Data?rcn=4',
+    { url: 'https://esw-onem2m.iiit.ac.in/~/in-cse/in-name/Team-22/'+req.query.expid+'?rcn=4',
         headers: {
             'X-M2M-Origin': 'ob3PvRNzkq:RaX61@EpnN',
             'Accept': 'application/json'
         }
 },
     (error, response, body) => {
-    if (error || response.statusCode !== 200) {
+    if (error) {
         return res.status(500).json({ type: 'error', message: err.message });
     }
-    res.json(JSON.parse(body));
+    var parsedData = JSON.parse(response.body);
+    var data = parsedData["m2m:cnt"]["m2m:cin"];
+    var finalData = []
+    data.forEach(element => {
+        finalData.push(element["con"]);
+    });
+    finalData = finalData.slice(-5);
+    var splitData = []
+    finalData.forEach(element => {
+        var d = element.split(" ");
+        var sendData = {
+            RPM : d[0],
+            Voltage : d[1],
+            Avg_Current : d[2],
+        };
+        splitData.push(sendData);
+    });
+    console.log("data=",splitData);
+    res.json(splitData);
     }
 )
 });
