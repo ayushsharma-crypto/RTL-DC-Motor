@@ -125,10 +125,13 @@ export default class Session extends Component {
             console.log("Temp Graph Data Per Volt= ", tempGraphDataPerVolt);
             this.setState({
                         graphData : formattedData,
-                        graphDataPerVolt : tempGraphDataPerVolt
+                        graphDataPerVolt : tempGraphDataPerVolt,
                     });
 
             console.log("hahaha");
+
+            console.log("Final Graph Data Per Volt= ", this.state.graphDataPerVolt);
+
         } catch (error) {
             console.log(error);
         }
@@ -291,7 +294,7 @@ export default class Session extends Component {
                 </form>}
                 {
                     this.state.isDisabled && 
-                    <div>Button will be available after 5 sec</div>
+                    <div>Button will be available after 25 sec</div>
                 }
                 Add Experiment Summary: 
                 {this.ExperimentRunningOrNot() 
@@ -368,6 +371,7 @@ export default class Session extends Component {
 
 
                   <br/>
+
                   <LineChart width={600} height={400} data={this.state.graphDataPerVolt}>
                     <CartesianGrid strokeDasharray="3 3"/>
                     <XAxis dataKey="Voltage" />
