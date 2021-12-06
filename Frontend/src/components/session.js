@@ -123,10 +123,8 @@ export default class Session extends Component {
             });
 
             console.log("Temp Graph Data Per Volt= ", tempGraphDataPerVolt);
-            this.setState({
-                        graphData : formattedData,
-                        graphDataPerVolt : tempGraphDataPerVolt,
-                    });
+            this.setState({graphData : formattedData});
+            this.setState({graphDataPerVolt : tempGraphDataPerVolt});
 
             console.log("hahaha");
 
@@ -139,6 +137,7 @@ export default class Session extends Component {
 
     async componentDidMount() {
         this.setState({graphData : ExampleData});
+        this.setState({graphDataPerVolt : ExampleData});
         var userEmail = await checkedLogged();
         this.setState({experimentId : this.props.location.state.experiment_id});
         if(userEmail == "") return;
