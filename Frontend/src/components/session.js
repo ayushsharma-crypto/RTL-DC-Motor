@@ -96,45 +96,44 @@ export default class Session extends Component {
              * Rotations of the motor
              */
             var Rotations = 150;
+            var formattedData = [];
+            response.forEach(element => {
+                var tempFormattedData = {
+                    RPM : parseFloat(element.RPM),
+                    Voltage : parseFloat(element.Voltage),
+                    Avg_Current : parseFloat(element.Avg_Current),
+                    TheoriticalRpm : (parseFloat(this.state.vcc)/12)*Rotations,
+                }
 
-            var formattedData = {
-                RPM : parseFloat(response.RPM),
-                Voltage : parseFloat(this.state.vcc),
-                Avg_Current : parseFloat(response.Avg_Current),
-                TheoriticalRpm : (parseFloat(this.state.vcc)/12)*Rotations,
-            };
+                formattedData.push(tempFormattedData);
+            });
+
 
             // var formattedData = {
-            //     RPM : parseFloat(val_array[0]),
-            //     Voltage : parseFloat(val_array[1]),
-            //     Avg_Current : parseFloat(val_array[2])
+                
             // };
 
-            // var formattedData = {
-            //     RPM : "1",
-            //     Voltage : "1",
-            //     Avg_Current : "1",
+            // if(this.state.graphData.length == 6)
+            // {
+            //     var temp = this.state.graphData;
+            //     temp.shift();
+            //     temp.push(formattedData);
+            //     this.setState({
+            //         graphData : temp
+            //     });
             // }
-            // var receivedData = await response.json();
-
-            if(this.state.graphData.length == 6)
-            {
-                var temp = this.state.graphData;
-                temp.shift();
-                temp.push(formattedData);
-                this.setState({
-                    graphData : temp
-                });
-            }
-            else
-            {
-                var temp = this.state.graphData;
-                temp.shift();
-                temp.push(formattedData);
-                this.setState({
-                    graphData : temp
-                });
-            }
+            // else
+            // {
+            //     var temp = this.state.graphData;
+            //     temp.shift();
+            //     temp.push(formattedData);
+            //     this.setState({
+            //         graphData : temp
+            //     });
+            // }
+            this.setState({
+                        graphData : formattedData
+                    });
         } catch (error) {
             console.log(error);
         }
