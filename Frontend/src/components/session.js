@@ -67,7 +67,7 @@ export default class Session extends Component {
             vcc : "",
             graphData : [],
             savedTime : "",
-            summary : "",
+            summary : "-",
             isDisabled : false,
             experimentId : "",
             graphDataPerVolt : [],
@@ -136,7 +136,7 @@ export default class Session extends Component {
     }
 
     async componentDidMount() {
-        this.setState({graphData : ExampleData});
+        this.setState({graphData : []});
         this.setState({graphDataPerVolt : []});
         var userEmail = await checkedLogged();
         this.setState({experimentId : this.props.location.state.experiment_id});
@@ -265,10 +265,15 @@ export default class Session extends Component {
                         <ReactPlayer url='https://www.youtube.com/watch?v=ZIhKmUGSpIo' />
                     </div>
                     <br/>
-                    <br/>
                     <button class = "btn-danger" onClick={() => this.StopSession()}>Stop Experiment</button>
+                    &nbsp;
+                    &nbsp;
+                    &nbsp;
+                    &nbsp;
                     <button class = "btn-success" onClick={() => this.SaveSession()}>Save Experiment</button>
                 </div>
+                <br/>
+                <br/>
                 <div>
                 {!this.state.isDisabled &&  this.ExperimentRunningOrNot() 
                 && 
@@ -293,9 +298,10 @@ export default class Session extends Component {
                 </form>}
                 {
                     this.state.isDisabled && 
-                    <div>Button will be available after 25 sec</div>
+                    <div>Please wait for 25 seconds while the experiment is running...</div>
                 }
                 Add Experiment Summary: 
+                <br/>
                 {this.ExperimentRunningOrNot() 
                 && 
                   <textarea value={this.state.summary} onChange={this.onChangesummary} />
@@ -325,7 +331,7 @@ export default class Session extends Component {
                     
                 {/* RPM (theo and obs) vs voltage */}
 
-                <LineChart width={600} height={400} data={this.state.graphData}>
+                <LineChart label="Voltage(V) vs Avg Current(A) vs Observerd RPM vs Theoretical RPM" width={600} height={400} data={this.state.graphData}>
                     <CartesianGrid strokeDasharray="3 3"/>
                     <XAxis dataKey="Voltage" />
                     <YAxis yAxisId="left-axis" />
@@ -342,9 +348,10 @@ export default class Session extends Component {
 
                     
                     <br/>
+                    <br/>
                     
 
-                    <LineChart width={600} height={400} data={this.state.graphData}>
+                    <LineChart label="Voltage(V) vs RPM vs Theoretical RPM" width={600} height={400} data={this.state.graphData}>
                     <CartesianGrid strokeDasharray="3 3"/>
                     <XAxis dataKey="Voltage" />
                     <YAxis yAxisId="left-axis" />
@@ -357,8 +364,9 @@ export default class Session extends Component {
                   </LineChart>
 
                   <br/>
+                  <br/>
 
-                  <LineChart width={600} height={400} data={this.state.graphData}>
+                  <LineChart label="Voltage(V) vs Avg Current(A)" width={600} height={400} data={this.state.graphData}>
                     <CartesianGrid strokeDasharray="3 3"/>
                     <XAxis dataKey="Voltage" />
                     <YAxis yAxisId="right-axis"/>
@@ -369,6 +377,7 @@ export default class Session extends Component {
                   </LineChart> 
 
 
+                  <br/>
                   <br/>
 
                   {/* <LineChart width={600} height={400} data={this.state.graphDataPerVolt}>

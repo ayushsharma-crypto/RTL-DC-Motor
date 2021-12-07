@@ -213,6 +213,7 @@ router.post("/createxperiment",async (req,res)=>{
 router.post("/experimentdata",async (req,res)=>{
     const data = await Userexperiment.findOne({ _id : req.body.experiment_id});
     if(data){
+        console.log("sending data == ", data);
         res.json({success : true,data : data,});
     }
     else {

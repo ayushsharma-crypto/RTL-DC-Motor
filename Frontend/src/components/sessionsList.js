@@ -39,7 +39,7 @@ export default class SessionsList extends Component {
       // var date = "ALL";
       var date = momentDate ? moment(momentDate).format('YYYY-MM-DD') : undefined;
       console.log(date);
-      // this.setState({ sessionDate: momentDate });
+      this.setState({ sessionDate: momentDate });
       var NewSessions = []
       // console.log(this.state.sessions);
       var OldSessions = this.state.sessions

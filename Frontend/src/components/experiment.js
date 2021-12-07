@@ -76,6 +76,7 @@ export default class Experiment extends Component {
       experiment_id : exp_id
     };
     var ExperimentData = await GetExperimentDataById(req);
+    console.log("received data : ", ExperimentData);
     this.setState({graphData : ExperimentData});
       console.log("expdata",ExperimentData);
   }
@@ -110,6 +111,11 @@ export default class Experiment extends Component {
                 <br/>
                 <br/>
                 <h1>Experiment Analysis{this.state.data.name}</h1>
+                <br/>
+                <br/>
+                <div class = "container">
+                  <p>{this.state.graphData.description}</p>
+                </div>
                 <br/>
                 <br/>
                 <div class = "graph">
