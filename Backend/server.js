@@ -14,13 +14,13 @@ const crypto = require('crypto');
 
 function decrypt(cipherText, key) {
     var newstring = "";
-    for (var i = 0; i < cipherText.length(); i+=6) {
-        cipherText[i] -= key;
-        newstring = newstring +  cipherText[i];
-        newstring
+    for (var i = 0; i < cipherText.length; i+=6) {
+        let x = cipherText[i].charCodeAt();
+        x = x - key;
+        newstring += String.fromCharCode(x);
     }
 
-    return cipherText;
+    return newstring;
 }
 
 // Cross-Origin approval and app-use
@@ -133,14 +133,15 @@ app.get('/getDataFromOneM2M', (req, res) => {
 
                 var key = 7;
                 var mydata = element["con"].split(" ");
+                console.log("received data", mydata[0]);
                 var decrypted = decrypt(mydata[0], key);
 
                 // decrypt first part of element["con"] first and then compare its hash with seocnd part of element["con"]
                 const hash = crypto.createHash('sha256').update(decrypted).digest('hex');
+                console.log("Decrypted string:", decrypted);
                 
                 if(hash === mydata[1])
                 {
-                    console.log("Decrypted string:", decrypted);
                     finalData.push(decrypted);
                 }
                 else
