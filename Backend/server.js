@@ -126,17 +126,16 @@ request(
 
 
         var key = "abcdefghijklmnop";
-        var encrypted = element["con"];
-        // var plainText = element["con"];
-        // var encrypted = encrypt(plainText, key, "base64");
+        var plainText = element["con"];
+        var encrypted = encrypt(plainText, key, "base64");
         console.log("Encrypted string (base64):", encrypted);
         const decrypted = decrypt(Buffer.from(encrypted, "hex"), key, "utf8")
         console.log("Decrypted string:", decrypted);
 
 
 
-
-        finalData.push(decrypted);
+        finalData.push(element["con"]);
+        // finalData.push(decrypted);
     });
     finalData = finalData.slice(-5);
     var splitData = []
