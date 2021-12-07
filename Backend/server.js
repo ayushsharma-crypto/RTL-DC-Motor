@@ -10,6 +10,16 @@ var session = require("express-session");
 const request = require('request');
 const crypto = require('crypto');
 
+function encrypt(plainText, key, outputEncoding = "hex") {
+    const cipher = crypto.createCipheriv("aes-128-ecb", key, null);
+    return Buffer.concat([cipher.update(plainText), cipher.final()]).toString(outputEncoding);
+}
+
+function decrypt(cipherText, key, outputEncoding = "utf8") {
+    const cipher = crypto.createDecipheriv("aes-128-ecb", key, null);
+    return Buffer.concat([cipher.update(cipherText), cipher.final()]).toString(outputEncoding);
+}
+
 // Cross-Origin approval and app-use
 // var corsOptions = {
     // origin: " http://localhost:3000",
@@ -113,7 +123,20 @@ request(
         // split element["con"] by " hash "
         // decrypt first part of element["con"] first and then compare its hash with seocnd part of element["con"]
         // const hash = crypto.createHash('sha256').update(pwd).digest('hex');
-        finalData.push(element["con"]);
+
+
+        var key = "abcdefghijklmnop";
+        var encrypted = element["con"];
+        // var plainText = element["con"];
+        // var encrypted = encrypt(plainText, key, "base64");
+        console.log("Encrypted string (base64):", encrypted);
+        const decrypted = decrypt(Buffer.from(encrypted, "hex"), key, "utf8")
+        console.log("Decrypted string:", decrypted);
+
+
+
+
+        finalData.push(decrypted);
     });
     finalData = finalData.slice(-5);
     var splitData = []
