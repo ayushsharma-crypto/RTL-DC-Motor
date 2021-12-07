@@ -67,7 +67,7 @@ export default class Session extends Component {
             vcc : "",
             graphData : [],
             savedTime : "",
-            summary : "-",
+            summary : "",
             isDisabled : false,
             experimentId : "",
             graphDataPerVolt : [],
@@ -300,6 +300,7 @@ export default class Session extends Component {
                     this.state.isDisabled && 
                     <div>Please wait for 25 seconds while the experiment is running...</div>
                 }
+                <br/>
                 Add Experiment Summary: 
                 <br/>
                 {this.ExperimentRunningOrNot() 

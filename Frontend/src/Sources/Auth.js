@@ -163,7 +163,7 @@ export async function GetExperimentDataById(req){
         if(response.data.success === true)
         {
             console.log(response.data.data.experimentData);
-            resolve(response.data.data.experimentData);
+            resolve(response.data.data);
         }
     });
     }

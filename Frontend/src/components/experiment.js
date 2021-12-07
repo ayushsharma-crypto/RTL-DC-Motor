@@ -66,6 +66,7 @@ export default class Experiment extends Component {
       email: "",
       data : '',
       graphData : [],
+      summary: ""
     };
   }
   
@@ -77,8 +78,9 @@ export default class Experiment extends Component {
     };
     var ExperimentData = await GetExperimentDataById(req);
     console.log("received data : ", ExperimentData);
-    this.setState({graphData : ExperimentData});
-      console.log("expdata",ExperimentData);
+    this.setState({graphData : ExperimentData.experimentData});
+    this.setState({summary : ExperimentData.description});
+    console.log("expdata",this.state.graphData);
   }
 
 
