@@ -286,7 +286,7 @@ export default class Session extends Component {
                             </Link>
                         </div>
                         )} */}
-            <ReactPlayer url="https://www.youtube.com/watch?v=ZIhKmUGSpIo" />
+            <iframe title="twitchStream" src="https://player.twitch.tv/?channel=nitinchandak&parent=localhost" frameborder="0" scrolling="no" height="378" width="620" muted="true"></iframe>
           </div>
           <br />
           <button class="btn-danger" onClick={() => this.StopSession()}>
