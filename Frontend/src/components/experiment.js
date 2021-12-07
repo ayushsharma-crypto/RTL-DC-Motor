@@ -87,12 +87,12 @@ export default class Experiment extends Component {
     var ExperimentData = await GetExperimentDataById(req);
     console.log("received data : ", ExperimentData);
     var temp = ExperimentData.experimentData;
-    temp.sort((a,b) => (parseFloat(a.Voltage) > parseFloat(b.Voltage)) ? 1 : ((parseFloat(b.Voltage) > parseFloat(a.Voltage)) ? -1 : 0));
+    // temp.sort((a,b) => (parseFloat(a.Voltage) > parseFloat(b.Voltage)) ? 1 : ((parseFloat(b.Voltage) > parseFloat(a.Voltage)) ? -1 : 0));
 
-    console.log("sorted data : ", temp);
+    // console.log("sorted data : ", temp);
     this.setState({graphData : temp});
-    this.setState({minRPM : temp[0].RPM-20});
-    this.setState({maxRPM : temp[0].RPM+20});
+    // this.setState({minRPM : temp[0].RPM-20});
+    // this.setState({maxRPM : temp[0].RPM+20});
     this.setState({summary : ExperimentData.description});
     console.log("expdata",this.state.graphData);
   }
@@ -152,8 +152,8 @@ export default class Experiment extends Component {
                 <LineChart width={600} height={400} data={this.state.graphData}>
                     <CartesianGrid strokeDasharray="3 3"/>
                     <XAxis dataKey="Voltage" />
-                    <YAxis yAxisId="left-axis" domain={[this.state.minRPM, this.state.maxRPM]}/>
-                    <YAxis yAxisId="right-axis" domain={[0, 2]} orientation="right" />
+                    <YAxis yAxisId="left-axis" />
+                    <YAxis yAxisId="right-axis"  orientation="right" />
                     <Tooltip />
                     <Legend wrapperStyle={{top: -20, left: 25}}/>
                     <Line yAxisId="left-axis" type="monotone" dataKey="RPM" 
@@ -170,7 +170,7 @@ export default class Experiment extends Component {
                     <LineChart width={600} height={400} data={this.state.graphData}>
                     <CartesianGrid strokeDasharray="3 3"/>
                     <XAxis dataKey="Voltage" />
-                    <YAxis yAxisId="left-axis" domain={[this.state.minRPM, this.state.maxRPM]} />
+                    <YAxis yAxisId="left-axis" />
                     <Tooltip />
                     <Legend wrapperStyle={{top: -20, left: 25}}/>
                     <Line yAxisId="left-axis" type="monotone" dataKey="RPM" 
@@ -190,7 +190,7 @@ export default class Experiment extends Component {
                   <LineChart width={600} height={400} data={this.state.graphData}>
                     <CartesianGrid strokeDasharray="3 3"/>
                     <XAxis dataKey="Voltage" />
-                    <YAxis yAxisId="right-axis" domain={[0,2]}/>
+                    <YAxis yAxisId="right-axis" />
                     <Tooltip />
                     <Legend wrapperStyle={{top: -20, left: 25}}/>
                     <Line yAxisId="right-axis" type="monotone" dataKey="Avg_Current" 
