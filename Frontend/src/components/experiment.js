@@ -83,7 +83,8 @@ export default class Experiment extends Component {
     var ExperimentData = await GetExperimentDataById(req);
     console.log("received data : ", ExperimentData);
     var temp = ExperimentData.experimentData;
-    temp.sort((a,b) => (a.Voltage > b.Voltage) ? 1 : ((b.Voltage > a.Voltage) ? -1 : 0))
+    temp.sort((a,b) => (parseFloat(a.Voltage) > parseFloat(b.Voltage)) ? 1 : ((parseFloat(b.Voltage) > parseFloat(a.Voltage)) ? -1 : 0))
+    console.log("sorted data : ", temp);
     this.setState({graphData : temp});
     this.setState({summary : ExperimentData.description});
     console.log("expdata",this.state.graphData);
