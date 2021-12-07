@@ -69,6 +69,18 @@ export default class Experiment extends Component {
       summary: ""
     };
   }
+
+  compare( a, b ) {
+    if ( a.Voltage < b.Voltage ){
+      return -1;
+    }
+    if ( a.Voltage > b.Voltage ){
+      return 1;
+    }
+    return 0;
+  }
+  
+  
   
   async componentDidMount(){
     var exp_id  = this.props.location.state.experiment_id;
@@ -78,7 +90,9 @@ export default class Experiment extends Component {
     };
     var ExperimentData = await GetExperimentDataById(req);
     console.log("received data : ", ExperimentData);
-    this.setState({graphData : ExperimentData.experimentData});
+    var temp = ExperimentData.experimentData;
+    temp.sort(compare);
+    this.setState({graphData : temp});
     this.setState({summary : ExperimentData.description});
     console.log("expdata",this.state.graphData);
   }
