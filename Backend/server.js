@@ -15,7 +15,7 @@ const crypto = require('crypto');
 function decrypt(cipherText, key) {
     var newstring = "";
     for (var i = 0; i < cipherText.length(); i+=6) {
-        cipherText[i] -= '7';
+        cipherText[i] -= key;
         newstring = newstring +  cipherText[i];
         newstring
     }
