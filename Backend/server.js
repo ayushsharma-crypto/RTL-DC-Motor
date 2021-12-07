@@ -8,6 +8,7 @@ const dotenv = require('dotenv');
 const cors = require("cors");
 var session = require("express-session");
 const request = require('request');
+const crypto = require('crypto');
 
 // Cross-Origin approval and app-use
 // var corsOptions = {
@@ -109,6 +110,9 @@ request(
     var data = parsedData["m2m:cnt"]["m2m:cin"];
     var finalData = []
     data.forEach(element => {
+        // split element["con"] by " hash "
+        // decrypt first part of element["con"] first and then compare its hash with seocnd part of element["con"]
+        // const hash = crypto.createHash('sha256').update(pwd).digest('hex');
         finalData.push(element["con"]);
     });
     finalData = finalData.slice(-5);
