@@ -2,11 +2,10 @@ import React, { Component } from "react";
 import axios from "axios";
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
-import Navbar from 'react-bootstrap/Navbar';
+import Navbar from "react-bootstrap/Navbar";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import { GoogleLogin } from 'react-google-login';
+import { GoogleLogin } from "react-google-login";
 import { signupData } from "../Sources/Auth";
-
 
 export default class Register extends Component {
   constructor(props) {
@@ -24,14 +23,11 @@ export default class Register extends Component {
     this.onSubmit = this.onSubmit.bind(this);
   }
 
-  responseGoogle=(response)=>
-  {
-    this.setState({email: response.profileObj.email})
-    this.setState({password: response.profileObj.googleId})
-    return
-  }
-  
-
+  responseGoogle = (response) => {
+    this.setState({ email: response.profileObj.email });
+    this.setState({ password: response.profileObj.googleId });
+    return;
+  };
 
   onChangeEmail(event) {
     this.setState({ email: event.target.value });
@@ -47,16 +43,16 @@ export default class Register extends Component {
     e.preventDefault();
 
     const newUser = {
-        name: this.state.name,
-        password: this.state.password,
-        email: this.state.email,
+      name: this.state.name,
+      password: this.state.password,
+      email: this.state.email,
     };
 
     console.log(newUser);
     signupData(newUser);
     // print(newUser)
     // axios.post("http://localhost:4000/user/signup", JSON.stringify(newUser),{
-    //   headers:{ 
+    //   headers:{
     //       'Content-Type': 'application/json',
     //       // 'Access-Control-Allow-Origin': '*'
     //    }
@@ -77,7 +73,6 @@ export default class Register extends Component {
     //   }
     // });
 
-
     this.setState({
       email: "",
       password: "",
@@ -89,19 +84,23 @@ export default class Register extends Component {
     return (
       <div>
         <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-        
-        <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-        <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="mr-auto">
-          <Link to="/" className="nav-link">Home</Link>
-          <Link to="/login" className="nav-link">Sign In</Link>
-          <Link to="/register" className="navbar-brand">Sign Up</Link>
-          </Nav>
-
-        </Navbar.Collapse>
-      </Navbar>
-        <br/>
-        <br/>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse id="responsive-navbar-nav">
+            <Nav className="mr-auto">
+              <Link to="/" className="nav-link">
+                Home
+              </Link>
+              <Link to="/login" className="nav-link">
+                Sign In
+              </Link>
+              <Link to="/register" className="navbar-brand">
+                Sign Up
+              </Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+        <br />
+        <br />
         <Form onSubmit={this.onSubmit}>
           <div className="form-group">
             <label>Full Name: </label>
@@ -155,17 +154,16 @@ export default class Register extends Component {
             <input type="submit" value="SignUp" className="btn btn-primary" />
           </div>
           <div>
-          <GoogleLogin
-          clientId="758385782295-9bpcpv513gbbkpio10bqkve1931jbh0n.apps.googleusercontent.com"
-          buttonText="SignUp Through Google"
-          onSuccess={this.responseGoogle}
-          onFailure={this.responseGoogle}
-          // cookiePolicy={'single-host-origin'}
-          />
+            <GoogleLogin
+              clientId="758385782295-9bpcpv513gbbkpio10bqkve1931jbh0n.apps.googleusercontent.com"
+              buttonText="SignUp Through Google"
+              onSuccess={this.responseGoogle}
+              onFailure={this.responseGoogle}
+              // cookiePolicy={'single-host-origin'}
+            />
           </div>
         </Form>
       </div>
     );
   }
 }
-

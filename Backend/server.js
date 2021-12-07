@@ -10,19 +10,22 @@ var session = require("express-session");
 const request = require('request');
 const crypto = require('crypto');
 
-function encrypt(plainText, key, outputEncoding = "hex") {
-    const cipher = crypto.createCipheriv("aes-128-ecb", key, null);
-    return Buffer.concat([cipher.update(plainText), cipher.final()]).toString(outputEncoding);
-}
 
-function decrypt(cipherText, key, outputEncoding = "utf8") {
-    const cipher = crypto.createDecipheriv("aes-128-ecb", key, null);
-    return Buffer.concat([cipher.update(cipherText), cipher.final()]).toString(outputEncoding);
+
+function decrypt(cipherText, key) {
+    var newstring = "";
+    for (var i = 0; i < cipherText.length(); i+=6) {
+        cipherText[i] -= '7';
+        newstring = newstring +  cipherText[i];
+        newstring
+    }
+
+    return cipherText;
 }
 
 // Cross-Origin approval and app-use
 // var corsOptions = {
-    // origin: " http://localhost:3000",
+// origin: " http://localhost:3000",
 //     optionsSuccessStatus: 200 ,// some legacy browsers (IE11, various SmartTVs) choke on 204
 //     credentials: true,
 // }
@@ -35,7 +38,9 @@ app.use(session({
     secret: `${process.env.SECRET}`,
     resave: true,
     saveUninitialized: true,
-    cookie: { maxAge: 60 * 60 * 1000 } // 1 hour
+    cookie: {
+        maxAge: 60 * 60 * 1000
+    } // 1 hour
 }));
 
 /**
@@ -45,16 +50,17 @@ app.use(session({
 app.use(cors({
     origin: 'http://localhost:3000',
     credentials: true,
-    default : 'http://localhost:3000',
+    default: 'http://localhost:3000',
 }));
 
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.json());  
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({
+    extended: true
+}));
 dotenv.config();
-
 
 
 
@@ -64,8 +70,7 @@ dotenv.config();
 
 
 
-
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
     // console.log(cors);
     // var origin = origins.indexOf(req.headers.origin) > -1 ? req.headers.Origin : cors.default;
     // console.log(origin);
@@ -74,20 +79,22 @@ app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Headers', "Content-Type");
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
-    });
-    
+});
+
 
 
 
 // Connection to MongoDB
-try{
-    mongoose.connect(`${process.env.API_URL}`, { useNewUrlParser: true, useUnifiedTopology: true });
+try {
+    mongoose.connect(`${process.env.API_URL}`, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    });
     const connection = mongoose.connection;
     connection.once('open', function() {
         console.log("MongoDB database connection established successfully !");
     });
-}
-catch (error){
+} catch (error) {
     console.error(`Error: ${error.message}`)
     process.exit(1)
 }
@@ -101,70 +108,78 @@ var BookingRouter = require("./routes/Booking");
 // setup API endpoints
 app.use("/experiment", experimentAPIRouter);
 app.use("/user", UserRouter);
-app.use("/booking",BookingRouter);
+app.use("/booking", BookingRouter);
 
-  
-app.get('/getDataFromOneM2M', (req, res) => { 
-request(
-    { url: 'https://esw-onem2m.iiit.ac.in/~/in-cse/in-name/Team-22/'+req.query.expid+'?rcn=4',
-        headers: {
-            'X-M2M-Origin': 'ob3PvRNzkq:RaX61@EpnN',
-            'Accept': 'application/json'
+
+app.get('/getDataFromOneM2M', (req, res) => {
+    request({
+            url: 'https://esw-onem2m.iiit.ac.in/~/in-cse/in-name/Team-22/' + req.query.expid + '?rcn=4',
+            headers: {
+                'X-M2M-Origin': 'ob3PvRNzkq:RaX61@EpnN',
+                'Accept': 'application/json'
+            }
+        },
+        (error, response, body) => {
+            if (error) {
+                return res.status(500).json({
+                    type: 'error',
+                    message: err.message
+                });
+            }
+            var parsedData = JSON.parse(response.body);
+            var data = parsedData["m2m:cnt"]["m2m:cin"];
+            var finalData = []
+            data.forEach(element => {
+
+                var key = 7;
+                var mydata = element["con"].split(" ");
+                var decrypted = decrypt(mydata[0], key);
+
+                // decrypt first part of element["con"] first and then compare its hash with seocnd part of element["con"]
+                const hash = crypto.createHash('sha256').update(decrypted).digest('hex');
+                
+                if(hash === mydata[1])
+                {
+                    console.log("Decrypted string:", decrypted);
+                    finalData.push(decrypted);
+                }
+                else
+                {
+                    console.log("Hashed data did not match!");
+                }
+
+
+
+                
+                // finalData.push(decrypted);
+            });
+            finalData = finalData.slice(-5);
+            var splitData = []
+            finalData.forEach(element => {
+                var d = element.split(" ");
+                var sendData = {
+                    RPM: d[0],
+                    Voltage: d[1],
+                    Avg_Current: d[2],
+                };
+                splitData.push(sendData);
+            });
+            console.log("data=", splitData);
+            res.json(splitData);
         }
-},
-    (error, response, body) => {
-    if (error) {
-        return res.status(500).json({ type: 'error', message: err.message });
-    }
-    var parsedData = JSON.parse(response.body);
-    var data = parsedData["m2m:cnt"]["m2m:cin"];
-    var finalData = []
-    data.forEach(element => {
-        // split element["con"] by " hash "
-        // decrypt first part of element["con"] first and then compare its hash with seocnd part of element["con"]
-        // const hash = crypto.createHash('sha256').update(pwd).digest('hex');
-
-
-        var key = "abcdefghijklmnop";
-        var plainText = element["con"];
-        var encrypted = encrypt(plainText, key, "base64");
-        console.log("Encrypted string (base64):", encrypted);
-        const decrypted = decrypt(Buffer.from(encrypted, "hex"), key, "utf8")
-        console.log("Decrypted string:", decrypted);
-
-
-
-        finalData.push(element["con"]);
-        // finalData.push(decrypted);
-    });
-    finalData = finalData.slice(-5);
-    var splitData = []
-    finalData.forEach(element => {
-        var d = element.split(" ");
-        var sendData = {
-            RPM : d[0],
-            Voltage : d[1],
-            Avg_Current : d[2],
-        };
-        splitData.push(sendData);
-    });
-    console.log("data=",splitData);
-    res.json(splitData);
-    }
-)
+    )
 });
 
 app.post('/makeNewNode', (req, res) => {
     console.log("req", req.body);
     var data = {
-        "m2m:cnt":{
+        "m2m:cnt": {
             "rn": req.body.experimentId,
             "mni": 120
         }
     };
-    request(
-        { 
-            method : 'POST',
+    request({
+            method: 'POST',
             url: 'https://esw-onem2m.iiit.ac.in/~/in-cse/in-name/Team-22',
             headers: {
                 'X-M2M-Origin': 'ob3PvRNzkq:RaX61@EpnN',
@@ -172,25 +187,28 @@ app.post('/makeNewNode', (req, res) => {
             },
             body: data,
             json: true,
-    },
+        },
         (error, response, body) => {
             console.log("response=", response.statusCode);
-        if (error) {
-            return res.status(500).json({ type: 'error', message: error.message });
-        }
+            if (error) {
+                return res.status(500).json({
+                    type: 'error',
+                    message: error.message
+                });
+            }
 
-        /* 
-        * THIS CODE SHOULD BE UNCOMMENTED
-        */
-        // var reps = {
-        //     RPM : body.something,
-        //     Voltage : body.something,
-        //     Avg_Current : body.something,
-        // }
-        // res.json(reps);
+            /* 
+             * THIS CODE SHOULD BE UNCOMMENTED
+             */
+            // var reps = {
+            //     RPM : body.something,
+            //     Voltage : body.something,
+            //     Avg_Current : body.something,
+            // }
+            // res.json(reps);
         }
     )
-    });
+});
 
 // server check
 app.listen(PORT, function() {

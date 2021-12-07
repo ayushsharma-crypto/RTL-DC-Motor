@@ -139,7 +139,6 @@ export default class Login extends Component {
           />
 
         
-        {/* </GoogleLogin> */}
       </div>
     );
   }
