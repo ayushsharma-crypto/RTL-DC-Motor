@@ -116,7 +116,7 @@ export default class Experiment extends Component {
                 <br/>
                 <br/>
                 <div class = "container">
-                  <p>{this.state.graphData.description}</p>
+                  <p>{this.state.summary}</p>
                 </div>
                 <br/>
                 <br/>
